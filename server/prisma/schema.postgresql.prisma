@@ -1,0 +1,107 @@
+// Prisma Schema for Neon PostgreSQL Deployment
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  id        String   @id @default(uuid())
+  email     String   @unique
+  password  String
+  name      String
+  role      String   // "SYSTEM_DEVELOPER", "SUPER_ADMIN", "VIEWER"
+  status    String   @default("ACTIVE")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Employee {
+  id                   String    @id @default(uuid())
+  employeeId           String    @unique // e.g. HR-EMP-0001
+  series               String    @default("HR-EMP-")
+  salutation           String?
+  firstName            String
+  middleName           String?
+  lastName             String?
+  gender               String?
+  dateOfBirth          String?
+  dateOfJoining        String?
+  status               String    @default("Active") // Active, Relieved, Inactive, On Leave
+  company              String    @default("akoma")
+  designation          String?
+  branch               String?
+  department           String?
+  reportsTo            String?
+  grade                String?
+  employmentType       String    @default("Full-time")
+  shiftType            String    @default("Day") // "Day", "Night", "General"
+  isStaff              Boolean   @default(true) // Staff vs Shift Worker
+
+  // Address & Contacts
+  mobile               String?
+  companyEmail         String?
+  personalEmail        String?
+  currentAddress       String?
+  currentAddressIs     String?
+  permanentAddress     String?
+  permanentAddressIs   String?
+  emergencyContactName String?
+  emergencyPhone       String?
+  emergencyRelation    String?
+
+  // Attendance & Leaves
+  leaveBalance         Int       @default(14)
+  attendancePercentage Float     @default(98.5)
+
+  // Salary & Finance (SENSITIVE: Restricted from VIEWER)
+  basicSalary          Float?
+  allowances           Float?
+  deductions           Float?
+  netSalary            Float?
+  bankName             String?
+  bankAccountNumber    String?
+  paymentMethod        String?
+
+  // Personal Details (SENSITIVE: Restricted from VIEWER)
+  maritalStatus        String?
+  bloodGroup           String?
+  nationality          String?
+  nationalId           String?
+
+  // Profile & Notes
+  bio                  String?
+  avatarUrl            String?
+
+  // Joining & Exit Info
+  confirmationDate     String?
+  contractEndDate      String?
+  relievingDate        String?
+  exitReason           String?
+
+  createdAt            DateTime  @default(now())
+  updatedAt            DateTime  @updatedAt
+}
+
+model SystemSetting {
+  id                      String    @id @default("system_config")
+  maintenanceMode         Boolean   @default(false)
+  maintenanceNotice       String    @default("System is currently undergoing routine maintenance.")
+  allowViewerRegistration Boolean   @default(false)
+  systemVersion           String    @default("v1.0.0")
+  superAdminSecretCode    String    @default("HR-SEC-7788")
+  lastBackupAt            DateTime?
+  updatedAt               DateTime  @updatedAt
+}
+
+model SystemLog {
+  id          String   @id @default(uuid())
+  action      String
+  performedBy String
+  details     String?
+  level       String   @default("INFO") // INFO, WARN, ERROR
+  createdAt   DateTime @default(now())
+}

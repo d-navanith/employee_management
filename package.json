@@ -1,0 +1,11 @@
+{
+  "name": "employee-management-root",
+  "version": "1.0.0",
+  "description": "Smart HR Management System - React Vite + Express + Prisma + Neon",
+  "scripts": {
+    "dev:server": "cd server && npm run dev",
+    "dev:client": "cd client && npm run dev",
+    "seed": "cd server && npm run seed",
+    "build": "cd client && npm run build"
+  }
+}
