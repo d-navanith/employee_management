@@ -41,7 +41,7 @@ const login = async (req, res) => {
 
     // SUPER ADMIN SECRET CODE VERIFICATION
     if (user.role === 'SUPER_ADMIN') {
-      const expectedSecretCode = (systemSettings?.superAdminSecretCode || process.env.SUPER_ADMIN_SECRET_CODE || 'HR-SEC-7788').trim();
+      const expectedSecretCode = (systemSettings?.superAdminSecretCode || process.env.SUPER_ADMIN_SECRET_CODE || 'HR7788').trim();
 
       if (!secretCode || !secretCode.trim()) {
         return res.status(403).json({

@@ -92,7 +92,7 @@ model SystemSetting {
   maintenanceNotice       String    @default("System is currently undergoing routine maintenance.")
   allowViewerRegistration Boolean   @default(false)
   systemVersion           String    @default("v1.0.0")
-  superAdminSecretCode    String    @default("HR-SEC-7788")
+  superAdminSecretCode    String    @default("HR7788")
   lastBackupAt            DateTime?
   updatedAt               DateTime  @updatedAt
 }

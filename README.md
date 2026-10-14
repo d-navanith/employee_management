@@ -18,7 +18,7 @@ The system implements 2 distinct login roles with database and API-level boundar
 
 | Role | Email | Password | Secret Code / Token | Capabilities & Boundaries |
 | :--- | :--- | :--- | :--- | :--- |
-| **Super Admin (HR)** | `hr@smarthr.local` | `Admin@123` | **`HR-SEC-7788`** | **Full System & HR Administration:** Protected by a **Secret Security Code / Token**. Full access to all modules, System Maintenance mode, audit logs, database snapshots, role management & user account delegation, controls and changes the secret code, and complete employee CRUD & sensitive records. |
+| **Super Admin (HR)** | `hr@smarthr.local` | `Admin@123` | **`HR7788`** | **Full System & HR Administration:** Protected by a **Secret Security Code / Token**. Full access to all modules, System Maintenance mode, audit logs, database snapshots, role management & user account delegation, controls and changes the secret code, and complete employee CRUD & sensitive records. |
 | **Viewer** | `viewer@smarthr.local` | `Viewer@123` | *Not required* | **Redacted Analytics Only:** View-only access. Shows workforce overview, total count, **Day vs Night shift worker counts**, and **Staff counts**. *All sensitive fields (Salary, Bank Accounts, Personal National ID, Emergency Contacts) are strictly redacted over the API.* |
 
 ---

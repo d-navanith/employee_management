@@ -48,7 +48,7 @@ const updateSystemSettings = async (req, res) => {
         maintenanceNotice: maintenanceNotice || 'System is under maintenance.',
         allowViewerRegistration: allowViewerRegistration !== undefined ? allowViewerRegistration : true,
         systemVersion: systemVersion || 'v1.0.0',
-        superAdminSecretCode: superAdminSecretCode || 'HR-SEC-7788'
+        superAdminSecretCode: superAdminSecretCode || 'HR7788'
       }
     });
 

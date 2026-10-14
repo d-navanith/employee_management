@@ -49,7 +49,7 @@ async function main() {
       maintenanceNotice: 'Scheduled maintenance notice: The system is operating normally.',
       allowViewerRegistration: true,
       systemVersion: 'v1.0.0',
-      superAdminSecretCode: 'HR-SEC-7788',
+      superAdminSecretCode: 'HR7788',
       lastBackupAt: new Date()
     }
   });

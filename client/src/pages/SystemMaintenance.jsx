@@ -198,7 +198,7 @@ const SystemMaintenance = () => {
                 <label className="soft-label">Active Secret Code</label>
                 <input
                   type="text"
-                  value={settings.superAdminSecretCode || 'HR-SEC-7788'}
+                  value={settings.superAdminSecretCode || 'HR7788'}
                   onChange={(e) => setSettings({ ...settings, superAdminSecretCode: e.target.value })}
                   className="soft-input text-xs font-mono font-bold text-blue-700 bg-blue-50/50 border border-blue-200"
                 />
