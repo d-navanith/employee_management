@@ -4,7 +4,7 @@ import api from '../services/api';
 import { Filter, MoreHorizontal, PieChart as PieIcon, RefreshCw } from 'lucide-react';
 
 const Home = () => {
-  const { user, isSuperAdmin, isDeveloper, isViewer } = useAuth();
+  const { user, isSuperAdmin, isViewer } = useAuth();
   const [stats, setStats] = useState({
     totalEmployees: 0,
     employeesJoiningThisQuarter: 0,
@@ -33,7 +33,6 @@ const Home = () => {
   }, []);
 
   const getWelcomeTitle = () => {
-    if (isDeveloper) return 'Welcome System Developer';
     if (isSuperAdmin) return 'Welcome Super Admin';
     if (isViewer) return 'Welcome Viewer';
     return `Welcome ${user?.name || 'User'}`;

@@ -24,7 +24,7 @@ const login = async (req, res) => {
     }
 
     if (user.status !== 'ACTIVE') {
-      return res.status(403).json({ message: 'Account is suspended. Please contact System Developer.' });
+      return res.status(403).json({ message: 'Account is suspended. Please contact the administrator.' });
     }
 
     // Check system maintenance mode
@@ -32,9 +32,9 @@ const login = async (req, res) => {
       where: { id: 'system_config' }
     });
 
-    if (systemSettings?.maintenanceMode && user.role !== 'SYSTEM_DEVELOPER') {
+    if (systemSettings?.maintenanceMode && user.role !== 'SUPER_ADMIN') {
       return res.status(503).json({
-        message: systemSettings.maintenanceNotice || 'System is under maintenance. Only System Developer can log in.',
+        message: systemSettings.maintenanceNotice || 'System is under maintenance. Only Super Admin can log in.',
         isMaintenance: true
       });
     }

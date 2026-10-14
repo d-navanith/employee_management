@@ -91,10 +91,10 @@ const UserRoles = () => {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-semibold text-gray-950 flex items-center gap-2">
-            <Shield className="text-purple-600" /> User Roles & Access Delegation
+            <Shield className="text-blue-600" /> User Roles & Access Delegation
           </h1>
           <p className="text-xs text-gray-500 mt-1">
-            System Developer governance: Grant or revoke HR Super Admin and Viewer roles.
+            Super Admin governance: Manage user accounts and assign Super Admin or Viewer roles.
           </p>
         </div>
 
@@ -119,18 +119,11 @@ const UserRoles = () => {
       )}
 
       {/* Role explanation cards */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div className="p-5 bg-purple-50/60 border border-purple-100 rounded-2xl">
-          <div className="text-xs font-bold text-purple-900 uppercase tracking-wider">System Developer</div>
-          <p className="text-[11px] text-purple-800 mt-1.5 leading-relaxed">
-            Full root level authority. Changes system settings, performs maintenance snapshots, views full logs, and manages other roles.
-          </p>
-        </div>
-
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div className="p-5 bg-blue-50/60 border border-blue-100 rounded-2xl">
           <div className="text-xs font-bold text-blue-900 uppercase tracking-wider">Super Admin (HR)</div>
           <p className="text-[11px] text-blue-800 mt-1.5 leading-relaxed">
-            Full employee lifecycle access. Adds, edits, and deletes employees; views confidential records (salary, emergency contacts, personal files).
+            Full system authority. Manages system settings, maintenance, audit logs, employee master records, and sensitive compensation files.
           </p>
         </div>
 
@@ -156,7 +149,7 @@ const UserRoles = () => {
           </thead>
           <tbody className="divide-y divide-gray-100">
             {users.map((u) => {
-              const isSelf = u.email === 'developer@smarthr.local';
+              const isSelf = u.email === 'hr@smarthr.local';
               return (
                 <tr key={u.id} className="hover:bg-gray-50/50">
                   <td className="py-3.5 px-5">
@@ -165,16 +158,14 @@ const UserRoles = () => {
                   </td>
                   <td className="py-3.5 px-5">
                     <span className={`px-2.5 py-1 rounded-full text-[10px] font-bold ${
-                      u.role === 'SYSTEM_DEVELOPER' ? 'bg-purple-100 text-purple-700' :
-                      u.role === 'SUPER_ADMIN' ? 'bg-blue-100 text-blue-700' :
-                      'bg-amber-100 text-amber-800'
+                      u.role === 'SUPER_ADMIN' ? 'bg-blue-100 text-blue-700' : 'bg-amber-100 text-amber-800'
                     }`}>
                       {u.role}
                     </span>
                   </td>
                   <td className="py-3.5 px-5">
                     {isSelf ? (
-                      <span className="text-gray-400 text-xs italic">Primary Developer</span>
+                      <span className="text-gray-400 text-xs italic">Primary Super Admin</span>
                     ) : (
                       <select
                         value={u.role}
@@ -183,7 +174,6 @@ const UserRoles = () => {
                       >
                         <option value="VIEWER">VIEWER</option>
                         <option value="SUPER_ADMIN">SUPER_ADMIN (HR)</option>
-                        <option value="SYSTEM_DEVELOPER">SYSTEM_DEVELOPER</option>
                       </select>
                     )}
                   </td>
@@ -270,8 +260,7 @@ const UserRoles = () => {
                   className="soft-input"
                 >
                   <option value="VIEWER">Viewer (Public metrics only)</option>
-                  <option value="SUPER_ADMIN">Super Admin / HR (Employee records & sensitive files)</option>
-                  <option value="SYSTEM_DEVELOPER">System Developer (Root access & system maintenance)</option>
+                  <option value="SUPER_ADMIN">Super Admin / HR (Full system & employee management)</option>
                 </select>
               </div>
 

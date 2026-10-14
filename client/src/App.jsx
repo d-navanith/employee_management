@@ -27,14 +27,10 @@ function App() {
               <Route path="/dashboard" element={<Dashboard />} />
               <Route path="/employees" element={<EmployeeList />} />
 
-              {/* Developer & HR only */}
-              <Route element={<ProtectedRoute allowedRoles={['SYSTEM_DEVELOPER', 'SUPER_ADMIN']} />}>
+              {/* Super Admin exclusive management routes */}
+              <Route element={<ProtectedRoute allowedRoles={['SUPER_ADMIN']} />}>
                 <Route path="/employees/new" element={<EmployeeForm />} />
                 <Route path="/employees/edit/:id" element={<EmployeeForm />} />
-              </Route>
-
-              {/* System Developer exclusive */}
-              <Route element={<ProtectedRoute allowedRoles={['SYSTEM_DEVELOPER']} />}>
                 <Route path="/maintenance" element={<SystemMaintenance />} />
                 <Route path="/roles" element={<UserRoles />} />
               </Route>

@@ -46,11 +46,11 @@ export const AuthProvider = ({ children }) => {
     localStorage.removeItem('smarthr_user');
   };
 
-  const isDeveloper = user?.role === 'SYSTEM_DEVELOPER';
   const isSuperAdmin = user?.role === 'SUPER_ADMIN';
   const isViewer = user?.role === 'VIEWER';
-  const canManageEmployees = isDeveloper || isSuperAdmin;
-  const canAccessSensitive = isDeveloper || isSuperAdmin;
+  const canManageEmployees = isSuperAdmin;
+  const canAccessSensitive = isSuperAdmin;
+  const canManageSystem = isSuperAdmin;
 
   return (
     <AuthContext.Provider
@@ -60,11 +60,11 @@ export const AuthProvider = ({ children }) => {
         loading,
         login,
         logout,
-        isDeveloper,
         isSuperAdmin,
         isViewer,
         canManageEmployees,
-        canAccessSensitive
+        canAccessSensitive,
+        canManageSystem
       }}
     >
       {children}

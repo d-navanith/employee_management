@@ -11,11 +11,11 @@ const {
   triggerBackup
 } = require('../controllers/systemController');
 const authMiddleware = require('../middleware/authMiddleware');
-const { requireRoles, ROLE_SYSTEM_DEVELOPER } = require('../middleware/roleMiddleware');
+const { requireRoles, ROLE_SUPER_ADMIN } = require('../middleware/roleMiddleware');
 
 router.use(authMiddleware);
-// Root level system maintenance & role management is exclusive to SYSTEM_DEVELOPER
-router.use(requireRoles(ROLE_SYSTEM_DEVELOPER));
+// Full system maintenance & role management is now granted to SUPER_ADMIN
+router.use(requireRoles(ROLE_SUPER_ADMIN));
 
 router.get('/settings', getSystemSettings);
 router.put('/settings', updateSystemSettings);

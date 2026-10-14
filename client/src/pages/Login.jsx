@@ -62,7 +62,7 @@ const Login = () => {
             Not registered?{' '}
             <button
               type="button"
-              onClick={() => alert('Viewer registration can be configured by System Developer in System Settings.')}
+              onClick={() => alert('Registration can be configured by Super Admin in System Settings.')}
               className="text-[#2b78f4] hover:underline cursor-pointer"
             >
               Click here to register.
@@ -140,7 +140,7 @@ const Login = () => {
 
             <button
               type="button"
-              onClick={() => alert('Please contact the System Developer to reset your account password.')}
+              onClick={() => alert('Please contact the Super Admin to reset your account password.')}
               className="text-[#2b78f4] hover:underline cursor-pointer"
             >
               Forgot Password?

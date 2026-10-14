@@ -156,9 +156,9 @@ const updateUser = async (req, res) => {
       return res.status(404).json({ message: 'User not found.' });
     }
 
-    // Prevent changing the main system developer to a non-developer
-    if (user.email === 'developer@smarthr.local' && role && role !== 'SYSTEM_DEVELOPER') {
-      return res.status(400).json({ message: 'Primary System Developer role cannot be demoted.' });
+    // Prevent changing the main super admin to a non-super-admin
+    if (user.email === 'hr@smarthr.local' && role && role !== 'SUPER_ADMIN') {
+      return res.status(400).json({ message: 'Primary Super Admin role cannot be demoted.' });
     }
 
     const updateData = {};
@@ -200,8 +200,8 @@ const deleteUser = async (req, res) => {
       return res.status(404).json({ message: 'User not found.' });
     }
 
-    if (user.id === req.user.id || user.email === 'developer@smarthr.local') {
-      return res.status(400).json({ message: 'You cannot delete your own active developer account.' });
+    if (user.id === req.user.id || user.email === 'hr@smarthr.local') {
+      return res.status(400).json({ message: 'You cannot delete your own active Super Admin account.' });
     }
 
     await prisma.user.delete({ where: { id } });

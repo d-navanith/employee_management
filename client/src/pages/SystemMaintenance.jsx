@@ -98,10 +98,10 @@ const SystemMaintenance = () => {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-semibold text-gray-950 flex items-center gap-2.5">
-            <Server className="text-purple-600" /> System Developer: Maintenance & Operations
+            <Server className="text-blue-600" /> Super Admin: System Maintenance & Operations
           </h1>
           <p className="text-xs text-gray-500 mt-1">
-            Root console for system availability, database maintenance snapshots, and audit trail.
+            Central administration console for system availability, database maintenance snapshots, and audit trail.
           </p>
         </div>
         <button
@@ -137,7 +137,7 @@ const SystemMaintenance = () => {
             </div>
 
             <p className="text-xs text-gray-500 mt-2">
-              Locks non-developer users out with a maintenance message.
+              Locks non-administrative users out with a maintenance message.
             </p>
 
             <form onSubmit={handleSaveNotice} className="mt-4 space-y-3">

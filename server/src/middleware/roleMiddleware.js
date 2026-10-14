@@ -14,14 +14,12 @@ const requireRoles = (...allowedRoles) => {
       });
     }
 
-    next;
     next();
   };
 };
 
 module.exports = {
   requireRoles,
-  ROLE_SYSTEM_DEVELOPER: 'SYSTEM_DEVELOPER',
   ROLE_SUPER_ADMIN: 'SUPER_ADMIN',
   ROLE_VIEWER: 'VIEWER'
 };

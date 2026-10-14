@@ -16,21 +16,11 @@ async function main() {
   const passwordHashAdmin = await bcrypt.hash('Admin@123', 10);
   const passwordHashViewer = await bcrypt.hash('Viewer@123', 10);
 
-  const developer = await prisma.user.create({
-    data: {
-      email: 'developer@smarthr.local',
-      password: passwordHashAdmin,
-      name: 'System Developer',
-      role: 'SYSTEM_DEVELOPER',
-      status: 'ACTIVE'
-    }
-  });
-
   const superAdmin = await prisma.user.create({
     data: {
       email: 'hr@smarthr.local',
       password: passwordHashAdmin,
-      name: 'HR Super Admin',
+      name: 'Super Admin (HR)',
       role: 'SUPER_ADMIN',
       status: 'ACTIVE'
     }
@@ -47,7 +37,6 @@ async function main() {
   });
 
   console.log('Created accounts:', {
-    developer: developer.email,
     superAdmin: superAdmin.email,
     viewer: viewer.email
   });
@@ -60,6 +49,7 @@ async function main() {
       maintenanceNotice: 'Scheduled maintenance notice: The system is operating normally.',
       allowViewerRegistration: true,
       systemVersion: 'v1.0.0',
+      superAdminSecretCode: 'HR-SEC-7788',
       lastBackupAt: new Date()
     }
   });
@@ -68,7 +58,7 @@ async function main() {
   await prisma.systemLog.create({
     data: {
       action: 'SYSTEM_INITIALIZATION',
-      performedBy: 'developer@smarthr.local',
+      performedBy: 'hr@smarthr.local',
       details: 'Initial database seeding and system configuration completed successfully.',
       level: 'INFO'
     }

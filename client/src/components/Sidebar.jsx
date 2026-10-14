@@ -13,7 +13,7 @@ import {
 } from 'lucide-react';
 
 const Sidebar = () => {
-  const { user, logout, isDeveloper, isSuperAdmin, isViewer } = useAuth();
+  const { user, logout, isSuperAdmin, isViewer } = useAuth();
   const navigate = useNavigate();
 
   const handleLogout = () => {
@@ -22,7 +22,6 @@ const Sidebar = () => {
   };
 
   const getRoleLabel = () => {
-    if (isDeveloper) return 'SYSTEM DEVELOPER';
     if (isSuperAdmin) return 'SUPER ADMIN';
     if (isViewer) return 'VIEWER PORTAL';
     return user?.role || 'USER';
@@ -93,11 +92,11 @@ const Sidebar = () => {
             {isViewer ? 'Employee Directory' : 'Employeeee'}
           </NavLink>
 
-          {/* System Developer Exclusive Tools */}
-          {isDeveloper && (
+          {/* Super Admin System Operations & Role Management */}
+          {isSuperAdmin && (
             <div className="pt-4 mt-2 border-t border-gray-100 flex flex-col gap-2">
               <div className="px-2 text-[10px] font-bold uppercase tracking-wider text-emerald-600">
-                System Developer Tools
+                Administration Tools
               </div>
               <NavLink
                 to="/maintenance"
@@ -137,11 +136,9 @@ const Sidebar = () => {
               {user?.name || user?.email}
             </span>
             <span className={`text-[10px] px-2 py-0.5 rounded-full font-bold ${
-              isDeveloper ? 'bg-purple-100 text-purple-700' :
-              isSuperAdmin ? 'bg-blue-100 text-blue-700' :
-              'bg-gray-200 text-gray-700'
+              isSuperAdmin ? 'bg-blue-100 text-blue-700' : 'bg-gray-200 text-gray-700'
             }`}>
-              {isDeveloper ? 'DEV' : isSuperAdmin ? 'HR' : 'VIEW'}
+              {isSuperAdmin ? 'ADMIN' : 'VIEW'}
             </span>
           </div>
           <div className="text-[11px] text-gray-400 truncate mt-0.5">
@@ -151,7 +148,7 @@ const Sidebar = () => {
 
         <button
           onClick={handleLogout}
-          className="w-full flex items-center justify-center gap-2 py-2 px-3 text-xs font-medium text-gray-500 hover:text-red-600 hover:bg-red-50 rounded-xl transition-colors"
+          className="w-full flex items-center justify-center gap-2 py-2 px-3 text-xs font-medium text-gray-500 hover:text-red-600 hover:bg-red-50 rounded-xl transition-colors cursor-pointer"
         >
           <LogOut size={14} />
           Sign Out

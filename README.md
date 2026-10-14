@@ -14,12 +14,11 @@ A role-based Human Resource & Employee Management Web Application built with **R
 
 ## 👥 Role-Based Authentication & Permissions Matrix
 
-The system implements 3 distinct login roles with database and API-level boundary isolation:
+The system implements 2 distinct login roles with database and API-level boundary isolation:
 
-| Role | Email | Password | Secret Token | Capabilities & Boundaries |
+| Role | Email | Password | Secret Code / Token | Capabilities & Boundaries |
 | :--- | :--- | :--- | :--- | :--- |
-| **System Developer** | `developer@smarthr.local` | `Admin@123` | *Not required* | **Root Privileges:** Full access to all modules, System Maintenance mode, audit logs, database snapshots, role management & user account delegation, controls and changes the Super Admin secret code, and complete employee CRUD. |
-| **Super Admin (HR)** | `hr@smarthr.local` | `Admin@123` | **`HR-SEC-7788`** | **Protected HR Operations:** Sign-in is strictly protected by a **Secret Security Code / Token**. Access to employee directory, add/edit/delete employee profiles, sensitive employee data (salaries, banking, emergency contacts, personal files). *Restricted from System Developer maintenance and server configs.* |
+| **Super Admin (HR)** | `hr@smarthr.local` | `Admin@123` | **`HR-SEC-7788`** | **Full System & HR Administration:** Protected by a **Secret Security Code / Token**. Full access to all modules, System Maintenance mode, audit logs, database snapshots, role management & user account delegation, controls and changes the secret code, and complete employee CRUD & sensitive records. |
 | **Viewer** | `viewer@smarthr.local` | `Viewer@123` | *Not required* | **Redacted Analytics Only:** View-only access. Shows workforce overview, total count, **Day vs Night shift worker counts**, and **Staff counts**. *All sensitive fields (Salary, Bank Accounts, Personal National ID, Emergency Contacts) are strictly redacted over the API.* |
 
 ---
@@ -29,8 +28,8 @@ The system implements 3 distinct login roles with database and API-level boundar
 The UI was crafted specifically to match the design language from your screenshots:
 1. **Sidebar Navigation:**
    - Dark square badge with emerald hexagonal icon: `SMART_HR`
-   - Active user role indicator (`SUPER ADMIN`, `SYSTEM DEVELOPER`, `VIEWER PORTAL`)
-   - Soft rounded pill navigation buttons: `Home`, `Dashboard`, `Employeeee` (and Developer maintenance tools)
+   - Active user role indicator (`SUPER ADMIN`, `VIEWER PORTAL`)
+   - Soft rounded pill navigation buttons: `Home`, `Dashboard`, `Employeeee`, `Maintenance & System`, `Manage User Roles`
 2. **Dashboard & Analytics:**
    - Stat cards: `Total Employees`, `New Hires (This Year)`, `Employee Exits (This Year)`, `Employees Joining (This Quarter)`, `Employees Relieving (This Quarter)`.
    - Dedicated shift metrics: `Day Shift Workers`, `Night Shift Workers`, `Staff Count`.
