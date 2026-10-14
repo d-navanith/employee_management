@@ -89,7 +89,20 @@ const Sidebar = () => {
               }`
             }
           >
-            {isViewer ? 'Employee Directory' : 'Employeeee'}
+            {isViewer ? 'Employee Directory' : 'Employees'}
+          </NavLink>
+
+          <NavLink
+            to="/profile"
+            className={({ isActive }) =>
+              `w-full text-center py-2.5 px-4 rounded-xl text-sm font-medium transition-all ${
+                isActive
+                  ? 'bg-blue-100 text-blue-950 font-semibold shadow-xs'
+                  : 'bg-gray-100/80 text-gray-600 hover:bg-blue-50 hover:text-blue-900'
+              }`
+            }
+          >
+            Profile & Security
           </NavLink>
 
           {/* Super Admin System Operations & Role Management */}
@@ -130,9 +143,13 @@ const Sidebar = () => {
 
       {/* User profile and logout footer */}
       <div className="pt-4 border-t border-gray-100 flex flex-col gap-3">
-        <div className="bg-gray-50 p-3 rounded-xl border border-gray-100">
+        <button
+          onClick={() => navigate('/profile')}
+          className="bg-gray-50 hover:bg-blue-50/60 p-3 rounded-2xl border border-gray-200/70 text-left transition-colors cursor-pointer group w-full"
+          title="Open Profile Settings"
+        >
           <div className="flex items-center justify-between">
-            <span className="text-xs font-semibold text-gray-900 truncate max-w-[120px]">
+            <span className="text-xs font-bold text-gray-900 group-hover:text-blue-600 truncate max-w-[130px] transition-colors">
               {user?.name || user?.email}
             </span>
             <span className={`text-[10px] px-2 py-0.5 rounded-full font-bold ${
@@ -141,16 +158,16 @@ const Sidebar = () => {
               {isSuperAdmin ? 'ADMIN' : 'VIEW'}
             </span>
           </div>
-          <div className="text-[11px] text-gray-400 truncate mt-0.5">
+          <div className="text-[11px] text-gray-400 truncate mt-0.5 group-hover:text-blue-500/80 transition-colors">
             {user?.email}
           </div>
-        </div>
+        </button>
 
         <button
           onClick={handleLogout}
-          className="w-full flex items-center justify-center gap-2 py-2 px-3 text-xs font-medium text-gray-500 hover:text-red-600 hover:bg-red-50 rounded-xl transition-colors cursor-pointer"
+          className="w-full flex items-center justify-center gap-2 py-2.5 px-3 text-xs font-semibold text-gray-500 hover:text-red-600 hover:bg-red-50 rounded-xl transition-colors cursor-pointer"
         >
-          <LogOut size={14} />
+          <LogOut size={15} />
           Sign Out
         </button>
       </div>

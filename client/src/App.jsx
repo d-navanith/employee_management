@@ -11,6 +11,7 @@ import EmployeeList from './pages/EmployeeList';
 import EmployeeForm from './pages/EmployeeForm';
 import SystemMaintenance from './pages/SystemMaintenance';
 import UserRoles from './pages/UserRoles';
+import Profile from './pages/Profile';
 
 function App() {
   return (
@@ -26,6 +27,7 @@ function App() {
               <Route path="/" element={<Home />} />
               <Route path="/dashboard" element={<Dashboard />} />
               <Route path="/employees" element={<EmployeeList />} />
+              <Route path="/profile" element={<Profile />} />
 
               {/* Super Admin exclusive management routes */}
               <Route element={<ProtectedRoute allowedRoles={['SUPER_ADMIN']} />}>

@@ -50,7 +50,13 @@ export const AuthProvider = ({ children }) => {
   const isViewer = user?.role === 'VIEWER';
   const canManageEmployees = isSuperAdmin;
   const canAccessSensitive = isSuperAdmin;
-  const canManageSystem = isSuperAdmin;
+  const updateUser = (updatedData) => {
+    setUser(prev => {
+      const merged = { ...prev, ...updatedData };
+      localStorage.setItem('smarthr_user', JSON.stringify(merged));
+      return merged;
+    });
+  };
 
   return (
     <AuthContext.Provider
@@ -60,6 +66,7 @@ export const AuthProvider = ({ children }) => {
         loading,
         login,
         logout,
+        updateUser,
         isSuperAdmin,
         isViewer,
         canManageEmployees,
