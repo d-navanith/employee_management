@@ -50,6 +50,7 @@ export const AuthProvider = ({ children }) => {
   const isViewer = user?.role === 'VIEWER';
   const canManageEmployees = isSuperAdmin;
   const canAccessSensitive = isSuperAdmin;
+  const canManageSystem = isSuperAdmin;
   const updateUser = (updatedData) => {
     setUser(prev => {
       const merged = { ...prev, ...updatedData };
