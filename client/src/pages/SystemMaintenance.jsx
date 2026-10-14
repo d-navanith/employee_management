@@ -27,7 +27,7 @@ const SystemMaintenance = () => {
   const [noticeMessage, setNoticeMessage] = useState('');
   const [showSecretCode, setShowSecretCode] = useState(false);
 
-  const loadData = async () => {
+  const loadData = async (isManual = false) => {
     setLoading(true);
     try {
       const [settingsRes, logsRes] = await Promise.all([
@@ -36,15 +36,23 @@ const SystemMaintenance = () => {
       ]);
       setSettings(settingsRes.data);
       setLogs(logsRes.data);
+      if (isManual) {
+        setNoticeMessage('System status and audit logs refreshed.');
+        setTimeout(() => setNoticeMessage(''), 2500);
+      }
     } catch (err) {
       console.error('Failed to load system maintenance info', err);
+      if (isManual) {
+        setNoticeMessage('Failed to refresh system status.');
+        setTimeout(() => setNoticeMessage(''), 2500);
+      }
     } finally {
       setLoading(false);
     }
   };
 
   useEffect(() => {
-    loadData();
+    loadData(false);
   }, []);
 
   const handleToggleMaintenance = async () => {
@@ -108,10 +116,13 @@ const SystemMaintenance = () => {
           </p>
         </div>
         <button
-          onClick={loadData}
-          className="flex items-center gap-2 text-xs font-medium text-gray-500 hover:text-gray-900 bg-gray-100 px-3 py-1.5 rounded-lg transition-colors"
+          onClick={() => loadData(true)}
+          disabled={loading}
+          className="flex items-center gap-2 text-xs font-semibold text-gray-700 hover:text-gray-950 bg-white border border-gray-200 hover:bg-gray-50 px-3.5 py-2 rounded-xl transition-all shadow-xs cursor-pointer disabled:opacity-50"
+          title="Refresh maintenance status and logs"
         >
-          <RefreshCw size={13} className={loading ? 'animate-spin' : ''} /> Refresh
+          <RefreshCw size={13} className={loading ? 'animate-spin text-blue-600' : ''} />
+          <span>{loading ? 'Refreshing...' : 'Refresh'}</span>
         </button>
       </div>
 

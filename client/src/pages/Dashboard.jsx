@@ -19,20 +19,34 @@ const Dashboard = () => {
     lastSynced: 'Just now'
   });
   const [loading, setLoading] = useState(true);
+  const [isRefreshing, setIsRefreshing] = useState(false);
+  const [syncNotice, setSyncNotice] = useState('');
 
-  const fetchStats = async () => {
+  const fetchStats = async (isManual = false) => {
+    if (isManual) setIsRefreshing(true);
+    else setLoading(true);
+
     try {
       const res = await api.get('/stats/dashboard');
       setStats(res.data);
+      if (isManual) {
+        setSyncNotice('Dashboard analytics synchronized!');
+        setTimeout(() => setSyncNotice(''), 2500);
+      }
     } catch (err) {
       console.error('Failed to load stats', err);
+      if (isManual) {
+        setSyncNotice('Failed to sync dashboard.');
+        setTimeout(() => setSyncNotice(''), 2500);
+      }
     } finally {
       setLoading(false);
+      setIsRefreshing(false);
     }
   };
 
   useEffect(() => {
-    fetchStats();
+    fetchStats(false);
   }, []);
 
   return (
@@ -43,13 +57,21 @@ const Dashboard = () => {
           <h1 className="text-2xl font-semibold text-gray-950">Analytics Dashboard</h1>
           <p className="text-xs text-gray-500 mt-0.5">Workforce overview, shift allocation, and structural metrics</p>
         </div>
-        <button
-          onClick={fetchStats}
-          className="flex items-center gap-2 text-xs font-medium text-gray-500 hover:text-gray-900 bg-gray-100 hover:bg-gray-200 px-3 py-1.5 rounded-lg transition-colors"
-        >
-          <RefreshCw size={13} className={loading ? 'animate-spin' : ''} />
-          Sync
-        </button>
+        <div className="flex items-center gap-3">
+          {syncNotice && (
+            <span className="text-xs font-medium text-emerald-700 bg-emerald-50 border border-emerald-200 px-3 py-1.5 rounded-xl">
+              {syncNotice}
+            </span>
+          )}
+          <button
+            onClick={() => fetchStats(true)}
+            disabled={isRefreshing}
+            className="flex items-center gap-2 text-xs font-semibold text-gray-700 hover:text-gray-950 bg-white border border-gray-200 hover:bg-gray-50 px-3.5 py-2 rounded-xl transition-all shadow-xs cursor-pointer disabled:opacity-50"
+          >
+            <RefreshCw size={13} className={isRefreshing ? 'animate-spin text-blue-600' : ''} />
+            <span>{isRefreshing ? 'Syncing...' : 'Sync Data'}</span>
+          </button>
+        </div>
       </div>
 
       {/* Row 1: 3 Stat Cards matching screenshot 5 */}

@@ -9,7 +9,11 @@ export const AuthProvider = ({ children }) => {
     return saved ? JSON.parse(saved) : null;
   });
   const [token, setToken] = useState(() => localStorage.getItem('smarthr_token') || null);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(() => {
+    const savedUser = localStorage.getItem('smarthr_user');
+    const savedToken = localStorage.getItem('smarthr_token');
+    return Boolean(savedToken) && !savedUser;
+  });
 
   useEffect(() => {
     const verifyUser = async () => {
@@ -19,8 +23,10 @@ export const AuthProvider = ({ children }) => {
           setUser(res.data.user);
           localStorage.setItem('smarthr_user', JSON.stringify(res.data.user));
         } catch (err) {
-          console.error('Session expired or invalid', err);
-          logout();
+          console.error('Session check error', err);
+          if (err.response?.status === 401) {
+            logout();
+          }
         }
       }
       setLoading(false);

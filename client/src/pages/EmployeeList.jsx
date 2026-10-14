@@ -21,7 +21,8 @@ import {
   Mail,
   MapPin,
   Calendar,
-  DollarSign
+  DollarSign,
+  RefreshCw
 } from 'lucide-react';
 
 const EmployeeList = () => {
@@ -30,6 +31,8 @@ const EmployeeList = () => {
 
   const [employees, setEmployees] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [isRefreshing, setIsRefreshing] = useState(false);
+  const [refreshNotice, setRefreshNotice] = useState('');
 
   // Filters matching clean standard UI
   const [idFilter, setIdFilter] = useState('');
@@ -40,20 +43,31 @@ const EmployeeList = () => {
   // Selected employee for View Details modal
   const [viewModalEmployee, setViewModalEmployee] = useState(null);
 
-  const fetchEmployees = async () => {
-    setLoading(true);
+  const fetchEmployees = async (isManual = false) => {
+    if (isManual) setIsRefreshing(true);
+    else setLoading(true);
+
     try {
       const res = await api.get('/employees');
       setEmployees(res.data);
+      if (isManual) {
+        setRefreshNotice('Employee directory refreshed successfully!');
+        setTimeout(() => setRefreshNotice(''), 3000);
+      }
     } catch (err) {
       console.error('Failed to load employees', err);
+      if (isManual) {
+        setRefreshNotice('Failed to refresh directory.');
+        setTimeout(() => setRefreshNotice(''), 3000);
+      }
     } finally {
       setLoading(false);
+      setIsRefreshing(false);
     }
   };
 
   useEffect(() => {
-    fetchEmployees();
+    fetchEmployees(false);
   }, []);
 
   const handleDelete = async (id, empNo) => {
@@ -106,17 +120,39 @@ const EmployeeList = () => {
           </p>
         </div>
 
-        {/* "+ Add Employee" button (Hidden for Viewer) */}
-        {canManageEmployees && (
+        <div className="flex items-center gap-3">
+          {/* Refresh Directory Button */}
           <button
-            onClick={() => navigate('/employees/new')}
-            className="flex items-center gap-2 bg-black hover:bg-gray-900 text-white px-6 py-3 rounded-xl text-sm font-semibold shadow-xs transition-all cursor-pointer shrink-0"
+            type="button"
+            onClick={() => fetchEmployees(true)}
+            disabled={isRefreshing}
+            className="flex items-center gap-2 border border-gray-200 bg-white hover:bg-gray-50 text-gray-700 px-4 py-3 rounded-xl text-sm font-semibold shadow-xs transition-all cursor-pointer shrink-0 disabled:opacity-50"
+            title="Refresh employee directory"
           >
-            <Plus size={18} />
-            <span>Add Employee</span>
+            <RefreshCw size={16} className={isRefreshing ? 'animate-spin text-blue-600' : ''} />
+            <span>{isRefreshing ? 'Refreshing...' : 'Refresh'}</span>
           </button>
-        )}
+
+          {/* "+ Add Employee" button (Hidden for Viewer) */}
+          {canManageEmployees && (
+            <button
+              onClick={() => navigate('/employees/new')}
+              className="flex items-center gap-2 bg-black hover:bg-gray-900 text-white px-6 py-3 rounded-xl text-sm font-semibold shadow-xs transition-all cursor-pointer shrink-0"
+            >
+              <Plus size={18} />
+              <span>Add Employee</span>
+            </button>
+          )}
+        </div>
       </div>
+
+      {/* Refresh Feedback Notice */}
+      {refreshNotice && (
+        <div className="flex items-center gap-2 text-sm text-emerald-800 bg-emerald-50 border border-emerald-200 px-4 py-3 rounded-xl font-medium">
+          <CheckCircle2 size={16} className="text-emerald-600 shrink-0" />
+          <span>{refreshNotice}</span>
+        </div>
+      )}
 
       {/* 4 Clean Filter Inputs with enhanced sizing */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">

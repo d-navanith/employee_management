@@ -51,9 +51,12 @@ const Profile = () => {
   const [secretLoading, setSecretLoading] = useState(false);
   const [secretSuccess, setSecretSuccess] = useState('');
   const [secretError, setSecretError] = useState('');
+  const [isRefreshing, setIsRefreshing] = useState(false);
+  const [refreshNotice, setRefreshNotice] = useState('');
 
   // Load latest profile & secret code
-  const loadProfileDetails = async () => {
+  const loadProfileDetails = async (isManual = false) => {
+    if (isManual) setIsRefreshing(true);
     try {
       const res = await api.get('/auth/me');
       if (res.data?.user) {
@@ -63,24 +66,31 @@ const Profile = () => {
         });
         updateUser(res.data.user);
       }
-    } catch (err) {
-      console.error('Failed to load profile', err);
-    }
 
-    if (isSuperAdmin) {
-      try {
+      if (isSuperAdmin) {
         const secretRes = await api.get('/auth/secret-code');
         if (secretRes.data?.secretCode) {
           setCurrentSecretCode(secretRes.data.secretCode);
         }
-      } catch (err) {
-        console.error('Failed to load secret code', err);
       }
+
+      if (isManual) {
+        setRefreshNotice('Profile & security data refreshed successfully!');
+        setTimeout(() => setRefreshNotice(''), 3000);
+      }
+    } catch (err) {
+      console.error('Failed to load profile', err);
+      if (isManual) {
+        setRefreshNotice('Failed to refresh data. Please check connection.');
+        setTimeout(() => setRefreshNotice(''), 3000);
+      }
+    } finally {
+      if (isManual) setIsRefreshing(false);
     }
   };
 
   useEffect(() => {
-    loadProfileDetails();
+    loadProfileDetails(false);
   }, []);
 
   // Handle Profile Information Submission
@@ -202,13 +212,22 @@ const Profile = () => {
             </div>
           </div>
 
-          <button
-            onClick={loadProfileDetails}
-            className="self-start sm:self-center flex items-center gap-2 px-4 py-2 border border-gray-200 rounded-xl text-xs font-semibold text-gray-700 hover:bg-gray-50 transition-colors cursor-pointer"
-          >
-            <RefreshCw size={14} />
-            <span>Refresh</span>
-          </button>
+          <div className="flex flex-col sm:items-end gap-2">
+            <button
+              type="button"
+              onClick={() => loadProfileDetails(true)}
+              disabled={isRefreshing}
+              className="self-start sm:self-auto flex items-center gap-2 px-4 py-2 border border-gray-200 rounded-xl text-xs font-semibold text-gray-700 hover:bg-gray-50 transition-colors cursor-pointer disabled:opacity-50"
+            >
+              <RefreshCw size={14} className={isRefreshing ? 'animate-spin text-blue-600' : ''} />
+              <span>{isRefreshing ? 'Refreshing...' : 'Refresh'}</span>
+            </button>
+            {refreshNotice && (
+              <span className="text-xs text-blue-600 font-semibold bg-blue-50 border border-blue-200 px-3 py-1 rounded-lg animate-in fade-in">
+                {refreshNotice}
+              </span>
+            )}
+          </div>
         </div>
       </div>
 

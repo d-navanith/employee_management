@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import api from '../services/api';
-import { Shield, UserPlus, UserCheck, Eye, EyeOff, Trash2, Key, CheckCircle, AlertCircle } from 'lucide-react';
+import { Shield, UserPlus, UserCheck, Eye, EyeOff, Trash2, Key, CheckCircle, AlertCircle, RefreshCw } from 'lucide-react';
 
 const UserRoles = () => {
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [isRefreshing, setIsRefreshing] = useState(false);
   const [successMsg, setSuccessMsg] = useState('');
   const [errorMsg, setErrorMsg] = useState('');
 
@@ -18,21 +19,29 @@ const UserRoles = () => {
     role: 'VIEWER'
   });
 
-  const loadUsers = async () => {
-    setLoading(true);
+  const loadUsers = async (isManual = false) => {
+    if (isManual) setIsRefreshing(true);
+    else setLoading(true);
+
     try {
       const res = await api.get('/system/users');
       setUsers(res.data);
+      if (isManual) {
+        setSuccessMsg('User accounts refreshed successfully.');
+        setTimeout(() => setSuccessMsg(''), 2500);
+      }
     } catch (err) {
       console.error(err);
       setErrorMsg('Failed to load user accounts.');
+      setTimeout(() => setErrorMsg(''), 3000);
     } finally {
       setLoading(false);
+      setIsRefreshing(false);
     }
   };
 
   useEffect(() => {
-    loadUsers();
+    loadUsers(false);
   }, []);
 
   const handleRoleChange = async (userId, newRole) => {
@@ -99,12 +108,25 @@ const UserRoles = () => {
           </p>
         </div>
 
-        <button
-          onClick={() => setShowCreateModal(true)}
-          className="flex items-center gap-2 bg-black hover:bg-gray-900 text-white px-4 py-2.5 rounded-xl text-xs font-semibold transition-colors cursor-pointer"
-        >
-          <UserPlus size={15} /> Add New User
-        </button>
+        <div className="flex items-center gap-3">
+          <button
+            type="button"
+            onClick={() => loadUsers(true)}
+            disabled={isRefreshing}
+            className="flex items-center gap-2 border border-gray-200 bg-white hover:bg-gray-50 text-gray-700 px-3.5 py-2.5 rounded-xl text-xs font-semibold shadow-xs transition-colors cursor-pointer disabled:opacity-50"
+            title="Refresh user accounts"
+          >
+            <RefreshCw size={14} className={isRefreshing ? 'animate-spin text-blue-600' : ''} />
+            <span>{isRefreshing ? 'Refreshing...' : 'Refresh'}</span>
+          </button>
+
+          <button
+            onClick={() => setShowCreateModal(true)}
+            className="flex items-center gap-2 bg-black hover:bg-gray-900 text-white px-4 py-2.5 rounded-xl text-xs font-semibold transition-colors cursor-pointer"
+          >
+            <UserPlus size={15} /> Add New User
+          </button>
+        </div>
       </div>
 
       {successMsg && (
