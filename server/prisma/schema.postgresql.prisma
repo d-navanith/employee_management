@@ -13,7 +13,7 @@ model User {
   email     String   @unique
   password  String
   name      String
-  role      String   // "SYSTEM_DEVELOPER", "SUPER_ADMIN", "VIEWER"
+  role      String   // "SUPER_ADMIN", "VIEWER"
   status    String   @default("ACTIVE")
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -21,43 +21,61 @@ model User {
 
 model Employee {
   id                   String    @id @default(uuid())
-  employeeId           String    @unique // e.g. HR-EMP-0001
-  series               String    @default("HR-EMP-")
-  salutation           String?
-  firstName            String
+  employeeNo           String    @unique // Employee No
+  employeeId           String?   // Optional alias
+  fullName             String    // Employee Full Name
+  callingName          String?   // Calling name
+  gender               String?   // Gender (Male, Female, Other)
+  birthDate            String?   // Birthdate
+  civilStatus          String?   // Civil Status (Single, Married, Divorced, Widowed)
+  nicNumber            String?   // NIC Number (SENSITIVE: Restricted from VIEWER)
+
+  // Organization & Employment
+  division             String?   // Division
+  designation          String?   // Designation
+  basedShift           String    @default("Day") // Based Shift: Day / Night / General
+  shiftTimings         String?   // Shift Timings e.g. "08:00 AM - 05:00 PM"
+  joiningDate          String?   // Joining date
+  resignedDate         String?   // Resigned date
+  employmentStatus     String    @default("Probation") // Permanent / Probation
+  status               String    @default("Active") // Active / Resigned / Inactive
+
+  // Contact Details
+  email                String?   // Email
+  contactNumber        String?   // Contact number
+  residentAddress      String?   // Resident Address
+  permanentAddress     String?   // Permanent Address
+
+  // Emergency Contact
+  emergencyContact     String?   // Emergency contact
+  relationship         String?   // Relationship
+
+  // Compensation (SENSITIVE: Restricted from VIEWER)
+  salary               Float?    // Salary
+
+  // Backward compatibility fields
+  firstName            String?
   middleName           String?
   lastName             String?
-  gender               String?
-  dateOfBirth          String?
-  dateOfJoining        String?
-  status               String    @default("Active") // Active, Relieved, Inactive, On Leave
-  company              String    @default("akoma")
-  designation          String?
+  company              String?   @default("akoma")
   branch               String?
   department           String?
   reportsTo            String?
   grade                String?
-  employmentType       String    @default("Full-time")
-  shiftType            String    @default("Day") // "Day", "Night", "General"
-  isStaff              Boolean   @default(true) // Staff vs Shift Worker
-
-  // Address & Contacts
+  employmentType       String?   @default("Full-time")
+  shiftType            String?   @default("Day")
+  isStaff              Boolean?  @default(true)
   mobile               String?
   companyEmail         String?
   personalEmail        String?
   currentAddress       String?
   currentAddressIs     String?
-  permanentAddress     String?
   permanentAddressIs   String?
   emergencyContactName String?
   emergencyPhone       String?
   emergencyRelation    String?
-
-  // Attendance & Leaves
-  leaveBalance         Int       @default(14)
-  attendancePercentage Float     @default(98.5)
-
-  // Salary & Finance (SENSITIVE: Restricted from VIEWER)
+  leaveBalance         Int?      @default(14)
+  attendancePercentage Float?    @default(98.5)
   basicSalary          Float?
   allowances           Float?
   deductions           Float?
@@ -65,18 +83,12 @@ model Employee {
   bankName             String?
   bankAccountNumber    String?
   paymentMethod        String?
-
-  // Personal Details (SENSITIVE: Restricted from VIEWER)
   maritalStatus        String?
   bloodGroup           String?
   nationality          String?
   nationalId           String?
-
-  // Profile & Notes
   bio                  String?
   avatarUrl            String?
-
-  // Joining & Exit Info
   confirmationDate     String?
   contractEndDate      String?
   relievingDate        String?

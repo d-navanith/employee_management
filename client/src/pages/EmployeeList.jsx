@@ -11,27 +11,33 @@ import {
   Eye, 
   Sun, 
   Moon, 
-  Download, 
-  FileText,
+  Clock,
   Building,
   CheckCircle2,
-  X
+  X,
+  FileText,
+  Shield,
+  Phone,
+  Mail,
+  MapPin,
+  Calendar,
+  DollarSign
 } from 'lucide-react';
 
 const EmployeeList = () => {
-  const { canManageEmployees, isViewer, isDeveloper } = useAuth();
+  const { canManageEmployees, isViewer } = useAuth();
   const navigate = useNavigate();
 
   const [employees, setEmployees] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  // Filters matching screenshot 3
+  // Filters matching clean standard UI
   const [idFilter, setIdFilter] = useState('');
   const [nameFilter, setNameFilter] = useState('');
-  const [deptFilter, setDeptFilter] = useState('');
+  const [divisionFilter, setDivisionFilter] = useState('');
   const [shiftFilter, setShiftFilter] = useState('All');
 
-  // Selected employee for Viewer modal
+  // Selected employee for View Details modal
   const [viewModalEmployee, setViewModalEmployee] = useState(null);
 
   const fetchEmployees = async () => {
@@ -50,8 +56,8 @@ const EmployeeList = () => {
     fetchEmployees();
   }, []);
 
-  const handleDelete = async (id, empId) => {
-    if (!window.confirm(`Are you sure you want to delete employee record ${empId}?`)) return;
+  const handleDelete = async (id, empNo) => {
+    if (!window.confirm(`Are you sure you want to delete employee record ${empNo}?`)) return;
     try {
       await api.delete(`/employees/${id}`);
       setEmployees(employees.filter(e => e.id !== id));
@@ -60,20 +66,28 @@ const EmployeeList = () => {
     }
   };
 
-  // Filter logic
+  // Filter logic across the 21 fields
   const filteredEmployees = employees.filter((emp) => {
-    const matchesId = !idFilter || emp.employeeId.toLowerCase().includes(idFilter.toLowerCase());
-    const fullName = `${emp.firstName || ''} ${emp.middleName || ''} ${emp.lastName || ''}`.trim();
-    const matchesName = !nameFilter || fullName.toLowerCase().includes(nameFilter.toLowerCase());
-    const matchesDept = !deptFilter || (emp.department && emp.department.toLowerCase().includes(deptFilter.toLowerCase()));
-    const matchesShift = shiftFilter === 'All' || emp.shiftType === shiftFilter;
-    return matchesId && matchesName && matchesDept && matchesShift;
+    const empNo = (emp.employeeNo || emp.employeeId || '').toLowerCase();
+    const matchesId = !idFilter || empNo.includes(idFilter.toLowerCase());
+
+    const fullName = (emp.fullName || `${emp.firstName || ''} ${emp.lastName || ''}`).toLowerCase();
+    const callingName = (emp.callingName || '').toLowerCase();
+    const matchesName = !nameFilter || fullName.includes(nameFilter.toLowerCase()) || callingName.includes(nameFilter.toLowerCase());
+
+    const div = (emp.division || emp.department || '').toLowerCase();
+    const matchesDiv = !divisionFilter || div.includes(divisionFilter.toLowerCase());
+
+    const shift = emp.basedShift || emp.shiftType || 'Day';
+    const matchesShift = shiftFilter === 'All' || shift === shiftFilter;
+
+    return matchesId && matchesName && matchesDiv && matchesShift;
   });
 
   const clearFilters = () => {
     setIdFilter('');
     setNameFilter('');
-    setDeptFilter('');
+    setDivisionFilter('');
     setShiftFilter('All');
   };
 
@@ -87,12 +101,12 @@ const EmployeeList = () => {
           </h1>
           <p className="text-xs text-gray-500 mt-0.5">
             {isViewer 
-              ? 'Sanitized workforce directory without personal or financial data'
-              : 'Manage employee master records, roles, profiles and contracts'}
+              ? 'Workforce directory with sanitized role and contact information'
+              : 'Manage employee master records across all 21 HR attributes'}
           </p>
         </div>
 
-        {/* "+ Add Employee" button matching Screenshot 3 (Hidden for Viewer) */}
+        {/* "+ Add Employee" button (Hidden for Viewer) */}
         {canManageEmployees && (
           <button
             onClick={() => navigate('/employees/new')}
@@ -104,13 +118,13 @@ const EmployeeList = () => {
         )}
       </div>
 
-      {/* Filter Bar with input style matching screenshot 3 */}
+      {/* 4 Clean Filter Inputs */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        {/* Filter 1: ID with '≈' */}
+        {/* Filter 1: ID */}
         <div className="relative flex items-center">
           <input
             type="text"
-            placeholder="ID"
+            placeholder="Employee No (e.g. EMP-001)"
             value={idFilter}
             onChange={(e) => setIdFilter(e.target.value)}
             className="soft-input pr-10"
@@ -120,11 +134,11 @@ const EmployeeList = () => {
           </span>
         </div>
 
-        {/* Filter 2: Full Name with '≈' */}
+        {/* Filter 2: Name */}
         <div className="relative flex items-center">
           <input
             type="text"
-            placeholder="Full Name"
+            placeholder="Name or Calling Name"
             value={nameFilter}
             onChange={(e) => setNameFilter(e.target.value)}
             className="soft-input pr-10"
@@ -134,13 +148,13 @@ const EmployeeList = () => {
           </span>
         </div>
 
-        {/* Filter 3: Department with '≈' */}
+        {/* Filter 3: Division */}
         <div className="relative flex items-center">
           <input
             type="text"
-            placeholder="Department"
-            value={deptFilter}
-            onChange={(e) => setDeptFilter(e.target.value)}
+            placeholder="Division / Department"
+            value={divisionFilter}
+            onChange={(e) => setDivisionFilter(e.target.value)}
             className="soft-input pr-10"
           />
           <span className="absolute right-3.5 text-gray-400 font-mono text-base select-none pointer-events-none">
@@ -165,7 +179,6 @@ const EmployeeList = () => {
 
       {/* Main Table or Empty State */}
       {filteredEmployees.length === 0 ? (
-        /* Empty State matching Screenshot 3 */
         <div className="bg-white border border-gray-100 rounded-3xl py-24 flex flex-col items-center justify-center text-center shadow-xs">
           <div className="w-14 h-14 rounded-full bg-gray-50 border border-gray-100 flex items-center justify-center text-gray-400 mb-4">
             <User size={26} />
@@ -192,14 +205,6 @@ const EmployeeList = () => {
             >
               Clear Filters
             </button>
-
-            <button
-              onClick={() => alert('Smart HR API Documentation is accessible under /api/health')}
-              className="flex items-center gap-1.5 px-4 py-2 border border-gray-200 rounded-xl text-xs font-medium text-gray-700 hover:bg-gray-50 transition-colors"
-            >
-              <FileText size={13} />
-              Documentation
-            </button>
           </div>
         </div>
       ) : (
@@ -209,85 +214,101 @@ const EmployeeList = () => {
             <table className="w-full text-left border-collapse">
               <thead>
                 <tr className="border-b border-gray-100 bg-gray-50/70 text-[11px] font-semibold text-gray-500 uppercase tracking-wider">
-                  <th className="py-3 px-5">ID</th>
+                  <th className="py-3 px-5">Emp No</th>
                   <th className="py-3 px-5">Employee Name</th>
+                  <th className="py-3 px-5">Division</th>
                   <th className="py-3 px-5">Designation</th>
-                  <th className="py-3 px-5">Department</th>
-                  <th className="py-3 px-5">Shift</th>
-                  <th className="py-3 px-5">Type</th>
-                  <th className="py-3 px-5">Status</th>
+                  <th className="py-3 px-5">Based Shift & Timings</th>
+                  <th className="py-3 px-5">Status / Term</th>
                   <th className="py-3 px-5 text-right">Actions</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-100 text-xs">
                 {filteredEmployees.map((emp) => {
-                  const fullName = `${emp.firstName || ''} ${emp.lastName || ''}`.trim();
+                  const empNo = emp.employeeNo || emp.employeeId;
+                  const fullName = emp.fullName || `${emp.firstName || ''} ${emp.lastName || ''}`.trim();
+                  const callingName = emp.callingName;
+                  const shift = emp.basedShift || emp.shiftType || 'Day';
+                  const isNight = shift === 'Night';
+
                   return (
                     <tr key={emp.id} className="hover:bg-gray-50/60 transition-colors">
                       <td className="py-3.5 px-5 font-mono font-medium text-gray-900">
-                        {emp.employeeId}
+                        {empNo}
                       </td>
                       <td className="py-3.5 px-5">
                         <div className="font-medium text-gray-900">{fullName}</div>
-                        <div className="text-[11px] text-gray-400">{emp.company || 'akoma'}</div>
+                        {callingName && (
+                          <div className="text-[11px] text-gray-500">
+                            Calling name: <span className="font-semibold text-gray-700">{callingName}</span>
+                          </div>
+                        )}
+                      </td>
+                      <td className="py-3.5 px-5 text-gray-700 font-medium">
+                        {emp.division || emp.department || '—'}
                       </td>
                       <td className="py-3.5 px-5 text-gray-600">
                         {emp.designation || '—'}
                       </td>
-                      <td className="py-3.5 px-5 text-gray-600">
-                        {emp.department || '—'}
+                      <td className="py-3.5 px-5">
+                        <div className="flex flex-col gap-1 items-start">
+                          <span className={`inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-semibold ${
+                            isNight
+                              ? 'bg-indigo-50 text-indigo-700 border border-indigo-100'
+                              : 'bg-amber-50 text-amber-700 border border-amber-100'
+                          }`}>
+                            {isNight ? <Moon size={11} /> : <Sun size={11} />}
+                            {shift} Shift
+                          </span>
+                          {emp.shiftTimings && (
+                            <span className="text-[10px] text-gray-500 flex items-center gap-1">
+                              <Clock size={10} />
+                              {emp.shiftTimings}
+                            </span>
+                          )}
+                        </div>
                       </td>
                       <td className="py-3.5 px-5">
-                        <span className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-semibold ${
-                          emp.shiftType === 'Night'
-                            ? 'bg-indigo-50 text-indigo-700 border border-indigo-100'
-                            : 'bg-amber-50 text-amber-700 border border-amber-100'
-                        }`}>
-                          {emp.shiftType === 'Night' ? <Moon size={11} /> : <Sun size={11} />}
-                          {emp.shiftType || 'Day'}
-                        </span>
-                      </td>
-                      <td className="py-3.5 px-5">
-                        <span className={`text-[11px] font-medium ${emp.isStaff ? 'text-emerald-700' : 'text-gray-500'}`}>
-                          {emp.isStaff ? 'Staff' : 'Worker'}
-                        </span>
-                      </td>
-                      <td className="py-3.5 px-5">
-                        <span className={`px-2 py-0.5 rounded-md text-[11px] font-medium ${
-                          emp.status === 'Active' 
-                            ? 'bg-emerald-50 text-emerald-700'
-                            : 'bg-gray-100 text-gray-600'
-                        }`}>
-                          {emp.status}
-                        </span>
+                        <div className="flex flex-col gap-1 items-start">
+                          <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-semibold ${
+                            emp.employmentStatus === 'Permanent'
+                              ? 'bg-emerald-50 text-emerald-700 border border-emerald-100'
+                              : 'bg-blue-50 text-blue-700 border border-blue-100'
+                          }`}>
+                            {emp.employmentStatus || 'Probation'}
+                          </span>
+                          <span className="text-[10px] text-gray-400">
+                            {emp.status || 'Active'}
+                          </span>
+                        </div>
                       </td>
                       <td className="py-3.5 px-5 text-right">
                         <div className="flex items-center justify-end gap-1.5">
-                          {canManageEmployees ? (
+                          <button
+                            onClick={() => setViewModalEmployee(emp)}
+                            className="p-1.5 text-gray-500 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors cursor-pointer"
+                            title="View Full Profile (21 Fields)"
+                          >
+                            <Eye size={15} />
+                          </button>
+
+                          {canManageEmployees && (
                             <>
                               <button
-                                onClick={() => navigate(`/employees/edit/${emp.id}`)}
-                                title="Edit Employee"
+                                onClick={() => navigate(`/employees/${emp.id}/edit`)}
                                 className="p-1.5 text-gray-500 hover:text-emerald-600 hover:bg-emerald-50 rounded-lg transition-colors cursor-pointer"
+                                title="Edit Employee"
                               >
                                 <Edit3 size={15} />
                               </button>
                               <button
-                                onClick={() => handleDelete(emp.id, emp.employeeId)}
-                                title="Delete Employee"
+                                onClick={() => handleDelete(emp.id, empNo)}
                                 className="p-1.5 text-gray-500 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors cursor-pointer"
+                                title="Delete Employee"
                               >
                                 <Trash2 size={15} />
                               </button>
                             </>
-                          ) : (
-                            <button
-                              onClick={() => setViewModalEmployee(emp)}
-                              className="px-2.5 py-1 text-xs font-medium text-emerald-700 bg-emerald-50 hover:bg-emerald-100 rounded-lg transition-colors flex items-center gap-1 cursor-pointer"
-                            >
-                              <Eye size={13} />
-                              Details
-                            </button>
                           )}
                         </div>
                       </td>
@@ -300,62 +321,194 @@ const EmployeeList = () => {
         </div>
       )}
 
-      {/* Viewer Modal (Sanitized summary popup for Viewer role) */}
+      {/* View 21-Field Employee Details Modal */}
       {viewModalEmployee && (
         <div className="fixed inset-0 z-50 bg-black/40 backdrop-blur-xs flex items-center justify-center p-4">
-          <div className="bg-white rounded-3xl max-w-lg w-full p-6 shadow-2xl border border-gray-100 relative">
-            <button
-              onClick={() => setViewModalEmployee(null)}
-              className="absolute top-5 right-5 p-1 text-gray-400 hover:text-gray-700 rounded-lg hover:bg-gray-100"
-            >
-              <X size={18} />
-            </button>
-
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-full bg-emerald-100 text-emerald-700 font-bold flex items-center justify-center text-sm">
-                {viewModalEmployee.firstName?.charAt(0)}
+          <div className="bg-white rounded-3xl max-w-3xl w-full max-h-[90vh] overflow-y-auto shadow-2xl border border-gray-100 animate-in fade-in zoom-in-95 duration-200">
+            {/* Modal Header */}
+            <div className="p-6 border-b border-gray-100 flex items-center justify-between sticky top-0 bg-white/95 backdrop-blur-xs z-10">
+              <div className="flex items-center gap-3">
+                <div className="w-11 h-11 rounded-2xl bg-blue-50 border border-blue-100 flex items-center justify-center text-blue-600 font-bold">
+                  {viewModalEmployee.callingName ? viewModalEmployee.callingName[0] : 'E'}
+                </div>
+                <div>
+                  <div className="flex items-center gap-2">
+                    <h3 className="text-lg font-bold text-gray-900">
+                      {viewModalEmployee.fullName || `${viewModalEmployee.firstName || ''} ${viewModalEmployee.lastName || ''}`}
+                    </h3>
+                    <span className="font-mono text-xs bg-gray-100 text-gray-700 px-2 py-0.5 rounded-md font-semibold">
+                      {viewModalEmployee.employeeNo || viewModalEmployee.employeeId}
+                    </span>
+                  </div>
+                  <p className="text-xs text-gray-500">
+                    Calling Name: <span className="text-gray-900 font-semibold">{viewModalEmployee.callingName || '—'}</span> • {viewModalEmployee.designation || 'Staff'}
+                  </p>
+                </div>
               </div>
-              <div>
-                <h3 className="font-semibold text-gray-900 text-base">
-                  {viewModalEmployee.firstName} {viewModalEmployee.lastName}
-                </h3>
-                <span className="font-mono text-xs text-gray-400">{viewModalEmployee.employeeId}</span>
+              <button
+                onClick={() => setViewModalEmployee(null)}
+                className="p-2 text-gray-400 hover:text-gray-700 hover:bg-gray-100 rounded-full transition-colors cursor-pointer"
+              >
+                <X size={18} />
+              </button>
+            </div>
+
+            {/* Modal Body - 21 Fields Structured */}
+            <div className="p-6 space-y-6">
+              {/* Group 1: Organization & Shift */}
+              <div className="bg-gray-50/70 border border-gray-100 rounded-2xl p-4 space-y-3">
+                <h4 className="text-xs font-bold text-gray-500 uppercase tracking-wider flex items-center gap-1.5">
+                  <Building size={14} className="text-blue-600" />
+                  Organization & Shift Details
+                </h4>
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-xs">
+                  <div>
+                    <span className="text-gray-400 block text-[11px]">Division</span>
+                    <span className="font-medium text-gray-800">{viewModalEmployee.division || viewModalEmployee.department || '—'}</span>
+                  </div>
+                  <div>
+                    <span className="text-gray-400 block text-[11px]">Designation</span>
+                    <span className="font-medium text-gray-800">{viewModalEmployee.designation || '—'}</span>
+                  </div>
+                  <div>
+                    <span className="text-gray-400 block text-[11px]">Based Shift</span>
+                    <span className="font-semibold text-blue-700">{viewModalEmployee.basedShift || viewModalEmployee.shiftType || 'Day'}</span>
+                  </div>
+                  <div>
+                    <span className="text-gray-400 block text-[11px]">Shift Timings</span>
+                    <span className="font-medium text-gray-800">{viewModalEmployee.shiftTimings || 'Standard'}</span>
+                  </div>
+                  <div>
+                    <span className="text-gray-400 block text-[11px]">Employment Status</span>
+                    <span className="font-semibold text-emerald-700">{viewModalEmployee.employmentStatus || 'Probation'}</span>
+                  </div>
+                  <div>
+                    <span className="text-gray-400 block text-[11px]">Joining Date</span>
+                    <span className="font-medium text-gray-800">{viewModalEmployee.joiningDate || viewModalEmployee.dateOfJoining || '—'}</span>
+                  </div>
+                  <div>
+                    <span className="text-gray-400 block text-[11px]">Resigned Date</span>
+                    <span className="font-medium text-gray-800">{viewModalEmployee.resignedDate || viewModalEmployee.relievingDate || 'N/A'}</span>
+                  </div>
+                  <div>
+                    <span className="text-gray-400 block text-[11px]">Overall Status</span>
+                    <span className="font-medium text-gray-800">{viewModalEmployee.status || 'Active'}</span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Group 2: Personal Identity */}
+              <div className="bg-gray-50/70 border border-gray-100 rounded-2xl p-4 space-y-3">
+                <h4 className="text-xs font-bold text-gray-500 uppercase tracking-wider flex items-center gap-1.5">
+                  <User size={14} className="text-emerald-600" />
+                  Personal Identity
+                </h4>
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-xs">
+                  <div>
+                    <span className="text-gray-400 block text-[11px]">Gender</span>
+                    <span className="font-medium text-gray-800">{viewModalEmployee.gender || '—'}</span>
+                  </div>
+                  <div>
+                    <span className="text-gray-400 block text-[11px]">Birthdate</span>
+                    <span className="font-medium text-gray-800">{viewModalEmployee.birthDate || viewModalEmployee.dateOfBirth || '—'}</span>
+                  </div>
+                  <div>
+                    <span className="text-gray-400 block text-[11px]">Civil Status</span>
+                    <span className="font-medium text-gray-800">{viewModalEmployee.civilStatus || viewModalEmployee.maritalStatus || 'Single'}</span>
+                  </div>
+                  <div>
+                    <span className="text-gray-400 block text-[11px]">NIC Number</span>
+                    {isViewer ? (
+                      <span className="text-gray-400 italic font-mono">[Restricted]</span>
+                    ) : (
+                      <span className="font-mono font-medium text-gray-800">{viewModalEmployee.nicNumber || viewModalEmployee.nationalId || '—'}</span>
+                    )}
+                  </div>
+                </div>
+              </div>
+
+              {/* Group 3: Contact & Address */}
+              <div className="bg-gray-50/70 border border-gray-100 rounded-2xl p-4 space-y-3">
+                <h4 className="text-xs font-bold text-gray-500 uppercase tracking-wider flex items-center gap-1.5">
+                  <MapPin size={14} className="text-indigo-600" />
+                  Contact & Addresses
+                </h4>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
+                  <div>
+                    <span className="text-gray-400 block text-[11px]">Email</span>
+                    <span className="font-medium text-gray-800">{viewModalEmployee.email || viewModalEmployee.companyEmail || '—'}</span>
+                  </div>
+                  <div>
+                    <span className="text-gray-400 block text-[11px]">Contact Number</span>
+                    <span className="font-medium text-gray-800">{viewModalEmployee.contactNumber || viewModalEmployee.mobile || '—'}</span>
+                  </div>
+                  <div>
+                    <span className="text-gray-400 block text-[11px]">Resident Address (Current)</span>
+                    {isViewer ? (
+                      <span className="text-gray-400 italic">[Restricted]</span>
+                    ) : (
+                      <span className="font-medium text-gray-800">{viewModalEmployee.residentAddress || viewModalEmployee.currentAddress || '—'}</span>
+                    )}
+                  </div>
+                  <div>
+                    <span className="text-gray-400 block text-[11px]">Permanent Address (Hometown)</span>
+                    {isViewer ? (
+                      <span className="text-gray-400 italic">[Restricted]</span>
+                    ) : (
+                      <span className="font-medium text-gray-800">{viewModalEmployee.permanentAddress || '—'}</span>
+                    )}
+                  </div>
+                </div>
+              </div>
+
+              {/* Group 4: Emergency & Compensation */}
+              <div className="bg-gray-50/70 border border-gray-100 rounded-2xl p-4 space-y-3">
+                <h4 className="text-xs font-bold text-gray-500 uppercase tracking-wider flex items-center gap-1.5">
+                  <Shield size={14} className="text-amber-600" />
+                  Emergency & Confidential Compensation
+                </h4>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs">
+                  <div>
+                    <span className="text-gray-400 block text-[11px]">Emergency Contact</span>
+                    {isViewer ? (
+                      <span className="text-gray-400 italic">[Restricted]</span>
+                    ) : (
+                      <span className="font-medium text-gray-800">{viewModalEmployee.emergencyContact || viewModalEmployee.emergencyPhone || '—'}</span>
+                    )}
+                  </div>
+                  <div>
+                    <span className="text-gray-400 block text-[11px]">Relationship</span>
+                    {isViewer ? (
+                      <span className="text-gray-400 italic">[Restricted]</span>
+                    ) : (
+                      <span className="font-medium text-gray-800">{viewModalEmployee.relationship || viewModalEmployee.emergencyRelation || '—'}</span>
+                    )}
+                  </div>
+                  <div>
+                    <span className="text-gray-400 block text-[11px]">Salary</span>
+                    {isViewer ? (
+                      <span className="text-gray-400 italic">[Restricted - Viewer]</span>
+                    ) : (
+                      <span className="font-mono font-bold text-emerald-700">
+                        {viewModalEmployee.salary !== undefined && viewModalEmployee.salary !== null
+                          ? `$${Number(viewModalEmployee.salary).toLocaleString()}`
+                          : (viewModalEmployee.basicSalary ? `$${Number(viewModalEmployee.basicSalary).toLocaleString()}` : '—')}
+                      </span>
+                    )}
+                  </div>
+                </div>
               </div>
             </div>
 
-            <div className="mt-6 border-t border-gray-100 pt-4 space-y-3 text-xs">
-              <div className="flex justify-between py-1 border-b border-gray-50">
-                <span className="text-gray-500">Department</span>
-                <span className="font-medium text-gray-900">{viewModalEmployee.department || '—'}</span>
-              </div>
-              <div className="flex justify-between py-1 border-b border-gray-50">
-                <span className="text-gray-500">Designation</span>
-                <span className="font-medium text-gray-900">{viewModalEmployee.designation || '—'}</span>
-              </div>
-              <div className="flex justify-between py-1 border-b border-gray-50">
-                <span className="text-gray-500">Shift</span>
-                <span className="font-semibold text-gray-900">{viewModalEmployee.shiftType} Shift</span>
-              </div>
-              <div className="flex justify-between py-1 border-b border-gray-50">
-                <span className="text-gray-500">Workforce Category</span>
-                <span className="font-medium text-gray-900">{viewModalEmployee.isStaff ? 'Staff' : 'Worker'}</span>
-              </div>
-              <div className="flex justify-between py-1 border-b border-gray-50">
-                <span className="text-gray-500">Employment Type</span>
-                <span className="font-medium text-gray-900">{viewModalEmployee.employmentType}</span>
-              </div>
-              <div className="flex justify-between py-1">
-                <span className="text-gray-500">Status</span>
-                <span className="font-semibold text-emerald-600">{viewModalEmployee.status}</span>
-              </div>
+            {/* Modal Footer */}
+            <div className="p-4 border-t border-gray-100 flex items-center justify-end bg-gray-50/50">
+              <button
+                onClick={() => setViewModalEmployee(null)}
+                className="px-5 py-2 bg-gray-900 text-white rounded-xl text-xs font-medium hover:bg-black transition-colors cursor-pointer"
+              >
+                Close
+              </button>
             </div>
-
-            <button
-              onClick={() => setViewModalEmployee(null)}
-              className="mt-6 w-full py-2.5 bg-gray-100 hover:bg-gray-200 text-gray-800 text-xs font-semibold rounded-xl transition-colors cursor-pointer"
-            >
-              Close
-            </button>
           </div>
         </div>
       )}

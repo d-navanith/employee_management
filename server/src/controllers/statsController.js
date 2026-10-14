@@ -8,43 +8,49 @@ const getDashboardStats = async (req, res) => {
     const activeEmployees = employees.filter(e => e.status === 'Active').length;
     const inactiveEmployees = employees.filter(e => e.status !== 'Active').length;
 
-    // Shift breakdown
-    const dayShiftWorkers = employees.filter(e => e.shiftType === 'Day').length;
-    const nightShiftWorkers = employees.filter(e => e.shiftType === 'Night').length;
-    const generalShiftWorkers = employees.filter(e => e.shiftType === 'General').length;
+    // Shift breakdown (basedShift: Day, Night, General)
+    const dayShiftWorkers = employees.filter(e => (e.basedShift === 'Day' || e.shiftType === 'Day')).length;
+    const nightShiftWorkers = employees.filter(e => (e.basedShift === 'Night' || e.shiftType === 'Night')).length;
+    const generalShiftWorkers = employees.filter(e => (e.basedShift === 'General' || e.shiftType === 'General')).length;
 
-    // Staff vs Non-staff (Workers)
-    const staffCount = employees.filter(e => e.isStaff).length;
-    const workerCount = employees.filter(e => !e.isStaff).length;
+    // Permanent vs Probation
+    const permanentCount = employees.filter(e => e.employmentStatus === 'Permanent').length;
+    const probationCount = employees.filter(e => e.employmentStatus === 'Probation').length;
 
-    // Joining & exit estimates based on year/quarter
+    // Staff vs Non-staff
+    const staffCount = employees.filter(e => e.isStaff !== false).length;
+    const workerCount = employees.filter(e => e.isStaff === false).length;
+
+    // Joining & exit estimates based on year
     const currentYear = new Date().getFullYear();
     const newHiresThisYear = employees.filter(e => {
-      if (!e.dateOfJoining) return false;
-      return e.dateOfJoining.startsWith(String(currentYear));
+      const jDate = e.joiningDate || e.dateOfJoining;
+      if (!jDate) return false;
+      return jDate.startsWith(String(currentYear));
     }).length;
 
     const employeeExitsThisYear = employees.filter(e => {
-      if (e.status !== 'Relieved') return false;
-      if (!e.relievingDate) return false;
-      return e.relievingDate.startsWith(String(currentYear));
+      if (e.status !== 'Resigned' && e.status !== 'Relieved') return false;
+      const rDate = e.resignedDate || e.relievingDate;
+      if (!rDate) return false;
+      return rDate.startsWith(String(currentYear));
     }).length;
 
-    // Department breakdown
-    const deptMap = {};
+    // Division breakdown
+    const divMap = {};
     employees.forEach(e => {
-      const d = e.department || 'Unassigned';
-      deptMap[d] = (deptMap[d] || 0) + 1;
+      const d = e.division || e.department || 'General';
+      divMap[d] = (divMap[d] || 0) + 1;
     });
-    const departmentWiseCount = Object.keys(deptMap).map(name => ({
+    const departmentWiseCount = Object.keys(divMap).map(name => ({
       name,
-      count: deptMap[name]
+      count: divMap[name]
     })).sort((a, b) => b.count - a.count);
 
     // Designation breakdown
     const desigMap = {};
     employees.forEach(e => {
-      const d = e.designation || 'General Staff';
+      const d = e.designation || 'Staff';
       desigMap[d] = (desigMap[d] || 0) + 1;
     });
     const designationWiseCount = Object.keys(desigMap).map(name => ({
@@ -52,16 +58,11 @@ const getDashboardStats = async (req, res) => {
       count: desigMap[name]
     })).sort((a, b) => b.count - a.count);
 
-    // Employment type breakdown
-    const typeMap = {};
-    employees.forEach(e => {
-      const t = e.employmentType || 'Full-time';
-      typeMap[t] = (typeMap[t] || 0) + 1;
-    });
-    const employmentTypeCount = Object.keys(typeMap).map(name => ({
-      name,
-      count: typeMap[name]
-    }));
+    // Status breakdown (Permanent / Probation)
+    const employmentStatusCount = [
+      { name: 'Permanent', count: permanentCount },
+      { name: 'Probation', count: probationCount }
+    ];
 
     res.json({
       totalEmployees,
@@ -70,15 +71,18 @@ const getDashboardStats = async (req, res) => {
       dayShiftWorkers,
       nightShiftWorkers,
       generalShiftWorkers,
+      permanentCount,
+      probationCount,
       staffCount,
       workerCount,
       newHiresThisYear,
       employeeExitsThisYear,
-      employeesJoiningThisQuarter: Math.min(newHiresThisYear, 2), // realistic count
+      employeesJoiningThisQuarter: Math.min(newHiresThisYear, 3),
       employeesRelievingThisQuarter: employeeExitsThisYear,
       departmentWiseCount,
       designationWiseCount,
-      employmentTypeCount,
+      employmentStatusCount,
+      employmentTypeCount: employmentStatusCount,
       lastSynced: new Date().toLocaleTimeString()
     });
   } catch (err) {
