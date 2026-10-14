@@ -163,14 +163,26 @@ const createEmployee = async (req, res) => {
       data.shiftType = data.basedShift;
     }
 
-    // Ensure numeric types
-    if (data.salary !== undefined && data.salary !== '') {
-      data.salary = parseFloat(data.salary);
+    // Ensure numeric types (convert empty strings to null)
+    if (data.salary !== undefined) {
+      data.salary = (data.salary !== '' && data.salary !== null && !isNaN(data.salary)) ? parseFloat(data.salary) : null;
       data.basicSalary = data.salary;
       data.netSalary = data.salary;
     }
-    if (data.basicSalary !== undefined && data.basicSalary !== '') {
-      data.basicSalary = parseFloat(data.basicSalary);
+    if (data.basicSalary !== undefined) {
+      data.basicSalary = (data.basicSalary !== '' && data.basicSalary !== null && !isNaN(data.basicSalary)) ? parseFloat(data.basicSalary) : null;
+    }
+    if (data.allowances !== undefined) {
+      data.allowances = (data.allowances !== '' && data.allowances !== null && !isNaN(data.allowances)) ? parseFloat(data.allowances) : null;
+    }
+    if (data.deductions !== undefined) {
+      data.deductions = (data.deductions !== '' && data.deductions !== null && !isNaN(data.deductions)) ? parseFloat(data.deductions) : null;
+    }
+    if (data.leaveBalance !== undefined) {
+      data.leaveBalance = (data.leaveBalance !== '' && data.leaveBalance !== null && !isNaN(data.leaveBalance)) ? parseInt(data.leaveBalance, 10) : null;
+    }
+    if (data.attendancePercentage !== undefined) {
+      data.attendancePercentage = (data.attendancePercentage !== '' && data.attendancePercentage !== null && !isNaN(data.attendancePercentage)) ? parseFloat(data.attendancePercentage) : null;
     }
 
     const employee = await prisma.employee.create({ data });
@@ -197,11 +209,26 @@ const updateEmployee = async (req, res) => {
     const { id } = req.params;
     const data = { ...req.body };
 
-    // Don't allow changing internal ID
+    // Strip non-editable or auto-managed metadata
     delete data.id;
+    delete data.createdAt;
+    delete data.updatedAt;
 
     if (data.employeeNo && !data.employeeId) {
       data.employeeId = data.employeeNo;
+    }
+
+    // Check duplicate employeeNo if changed
+    if (data.employeeNo) {
+      const existingConflict = await prisma.employee.findFirst({
+        where: {
+          employeeNo: data.employeeNo,
+          NOT: { id }
+        }
+      });
+      if (existingConflict) {
+        return res.status(400).json({ message: `Employee No ${data.employeeNo} is already assigned to another employee.` });
+      }
     }
 
     // Maintain backward compatibility fields
@@ -217,14 +244,26 @@ const updateEmployee = async (req, res) => {
       data.shiftType = data.basedShift;
     }
 
-    // Format numbers
-    if (data.salary !== undefined && data.salary !== '') {
-      data.salary = parseFloat(data.salary);
+    // Format numbers safely (convert empty string or NaN to null)
+    if (data.salary !== undefined) {
+      data.salary = (data.salary !== '' && data.salary !== null && !isNaN(data.salary)) ? parseFloat(data.salary) : null;
       data.basicSalary = data.salary;
       data.netSalary = data.salary;
     }
-    if (data.basicSalary !== undefined && data.basicSalary !== '') {
-      data.basicSalary = parseFloat(data.basicSalary);
+    if (data.basicSalary !== undefined) {
+      data.basicSalary = (data.basicSalary !== '' && data.basicSalary !== null && !isNaN(data.basicSalary)) ? parseFloat(data.basicSalary) : null;
+    }
+    if (data.allowances !== undefined) {
+      data.allowances = (data.allowances !== '' && data.allowances !== null && !isNaN(data.allowances)) ? parseFloat(data.allowances) : null;
+    }
+    if (data.deductions !== undefined) {
+      data.deductions = (data.deductions !== '' && data.deductions !== null && !isNaN(data.deductions)) ? parseFloat(data.deductions) : null;
+    }
+    if (data.leaveBalance !== undefined) {
+      data.leaveBalance = (data.leaveBalance !== '' && data.leaveBalance !== null && !isNaN(data.leaveBalance)) ? parseInt(data.leaveBalance, 10) : null;
+    }
+    if (data.attendancePercentage !== undefined) {
+      data.attendancePercentage = (data.attendancePercentage !== '' && data.attendancePercentage !== null && !isNaN(data.attendancePercentage)) ? parseFloat(data.attendancePercentage) : null;
     }
 
     const updated = await prisma.employee.update({

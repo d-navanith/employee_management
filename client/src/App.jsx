@@ -31,6 +31,7 @@ function App() {
               <Route element={<ProtectedRoute allowedRoles={['SUPER_ADMIN']} />}>
                 <Route path="/employees/new" element={<EmployeeForm />} />
                 <Route path="/employees/edit/:id" element={<EmployeeForm />} />
+                <Route path="/employees/:id/edit" element={<EmployeeForm />} />
                 <Route path="/maintenance" element={<SystemMaintenance />} />
                 <Route path="/roles" element={<UserRoles />} />
               </Route>

@@ -295,7 +295,7 @@ const EmployeeList = () => {
                           {canManageEmployees && (
                             <>
                               <button
-                                onClick={() => navigate(`/employees/${emp.id}/edit`)}
+                                onClick={() => navigate(`/employees/edit/${emp.id}`)}
                                 className="p-1.5 text-gray-500 hover:text-emerald-600 hover:bg-emerald-50 rounded-lg transition-colors cursor-pointer"
                                 title="Edit Employee"
                               >
@@ -501,7 +501,20 @@ const EmployeeList = () => {
             </div>
 
             {/* Modal Footer */}
-            <div className="p-4 border-t border-gray-100 flex items-center justify-end bg-gray-50/50">
+            <div className="p-4 border-t border-gray-100 flex items-center justify-end gap-2 bg-gray-50/50">
+              {canManageEmployees && (
+                <button
+                  onClick={() => {
+                    const empId = viewModalEmployee.id;
+                    setViewModalEmployee(null);
+                    navigate(`/employees/edit/${empId}`);
+                  }}
+                  className="px-4 py-2 bg-blue-600 text-white rounded-xl text-xs font-medium hover:bg-blue-700 transition-colors cursor-pointer flex items-center gap-1.5"
+                >
+                  <Edit3 size={14} />
+                  <span>Edit Profile</span>
+                </button>
+              )}
               <button
                 onClick={() => setViewModalEmployee(null)}
                 className="px-5 py-2 bg-gray-900 text-white rounded-xl text-xs font-medium hover:bg-black transition-colors cursor-pointer"

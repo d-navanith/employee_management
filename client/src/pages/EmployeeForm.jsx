@@ -85,7 +85,7 @@ const EmployeeForm = () => {
             emergencyContact: data.emergencyContact || data.emergencyPhone || '',
             relationship: data.relationship || data.emergencyRelation || '',
             shiftTimings: data.shiftTimings || '08:30 AM - 05:30 PM',
-            salary: data.salary || data.basicSalary || '',
+            salary: (data.salary !== undefined && data.salary !== null) ? data.salary : (data.basicSalary ?? ''),
             employmentStatus: data.employmentStatus || 'Probation',
             status: data.status || 'Active'
           });
