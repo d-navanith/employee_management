@@ -12,6 +12,7 @@ import EmployeeForm from './pages/EmployeeForm';
 import SystemMaintenance from './pages/SystemMaintenance';
 import UserRoles from './pages/UserRoles';
 import Profile from './pages/Profile';
+import ImportAutomation from './pages/ImportAutomation';
 
 function App() {
   return (
@@ -34,6 +35,7 @@ function App() {
                 <Route path="/employees/new" element={<EmployeeForm />} />
                 <Route path="/employees/edit/:id" element={<EmployeeForm />} />
                 <Route path="/employees/:id/edit" element={<EmployeeForm />} />
+                <Route path="/import-automation" element={<ImportAutomation />} />
                 <Route path="/maintenance" element={<SystemMaintenance />} />
                 <Route path="/roles" element={<UserRoles />} />
               </Route>

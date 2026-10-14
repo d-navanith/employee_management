@@ -112,6 +112,19 @@ const Sidebar = () => {
                 Administration Tools
               </div>
               <NavLink
+                to="/import-automation"
+                className={({ isActive }) =>
+                  `w-full text-center py-2.5 px-4 rounded-xl text-sm font-medium transition-all ${
+                    isActive
+                      ? 'bg-indigo-100 text-indigo-950 font-semibold shadow-xs'
+                      : 'bg-gray-100/80 text-gray-600 hover:bg-indigo-50 hover:text-indigo-900'
+                  }`
+                }
+              >
+                Smart Auto-Sync (Files/Sheets)
+              </NavLink>
+
+              <NavLink
                 to="/maintenance"
                 className={({ isActive }) =>
                   `w-full text-center py-2.5 px-4 rounded-xl text-sm font-medium transition-all ${

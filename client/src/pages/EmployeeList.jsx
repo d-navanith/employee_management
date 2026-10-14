@@ -22,8 +22,10 @@ import {
   MapPin,
   Calendar,
   DollarSign,
-  RefreshCw
+  RefreshCw,
+  Sparkles
 } from 'lucide-react';
+import ImportAutomation from './ImportAutomation';
 
 const EmployeeList = () => {
   const { canManageEmployees, isViewer } = useAuth();
@@ -33,6 +35,7 @@ const EmployeeList = () => {
   const [loading, setLoading] = useState(true);
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [refreshNotice, setRefreshNotice] = useState('');
+  const [showImportModal, setShowImportModal] = useState(false);
 
   // Filters matching clean standard UI
   const [idFilter, setIdFilter] = useState('');
@@ -132,6 +135,18 @@ const EmployeeList = () => {
             <RefreshCw size={16} className={isRefreshing ? 'animate-spin text-blue-600' : ''} />
             <span>{isRefreshing ? 'Refreshing...' : 'Refresh'}</span>
           </button>
+
+          {/* Smart Auto-Import Button (Excel, Google Sheets, PDF) */}
+          {canManageEmployees && (
+            <button
+              onClick={() => setShowImportModal(true)}
+              className="flex items-center gap-2 bg-gradient-to-r from-indigo-600 to-blue-600 hover:from-indigo-700 hover:to-blue-700 text-white px-5 py-3 rounded-xl text-sm font-semibold shadow-xs transition-all cursor-pointer shrink-0"
+              title="Automated Excel, Google Sheets, and PDF Ingestion"
+            >
+              <Sparkles size={16} className="text-amber-300" />
+              <span>Smart Auto-Import</span>
+            </button>
+          )}
 
           {/* "+ Add Employee" button (Hidden for Viewer) */}
           {canManageEmployees && (
@@ -558,6 +573,21 @@ const EmployeeList = () => {
                 Close
               </button>
             </div>
+          </div>
+        </div>
+      )}
+
+      {/* Smart Auto-Import Modal */}
+      {showImportModal && (
+        <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-center justify-center p-4 overflow-y-auto">
+          <div className="bg-white rounded-3xl p-6 sm:p-8 max-w-5xl w-full max-h-[92vh] overflow-y-auto shadow-2xl relative">
+            <ImportAutomation
+              isModal={true}
+              onClose={() => setShowImportModal(false)}
+              onComplete={() => {
+                fetchEmployees(true);
+              }}
+            />
           </div>
         </div>
       )}
