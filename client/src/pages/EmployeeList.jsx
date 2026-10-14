@@ -92,14 +92,14 @@ const EmployeeList = () => {
   };
 
   return (
-    <div className="max-w-7xl mx-auto space-y-6">
+    <div className="w-full max-w-7xl mx-auto space-y-7">
       {/* Top Action Bar */}
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-semibold text-gray-950">
+          <h1 className="text-3xl font-bold text-gray-950 tracking-tight">
             {isViewer ? 'Employee Directory' : 'Employees'}
           </h1>
-          <p className="text-xs text-gray-500 mt-0.5">
+          <p className="text-sm text-gray-500 mt-1">
             {isViewer 
               ? 'Workforce directory with sanitized role and contact information'
               : 'Manage employee master records across all 21 HR attributes'}
@@ -110,16 +110,16 @@ const EmployeeList = () => {
         {canManageEmployees && (
           <button
             onClick={() => navigate('/employees/new')}
-            className="flex items-center gap-2 bg-black hover:bg-gray-900 text-white px-5 py-2.5 rounded-xl text-sm font-medium shadow-xs transition-all cursor-pointer"
+            className="flex items-center gap-2 bg-black hover:bg-gray-900 text-white px-6 py-3 rounded-xl text-sm font-semibold shadow-xs transition-all cursor-pointer shrink-0"
           >
-            <Plus size={16} />
+            <Plus size={18} />
             <span>Add Employee</span>
           </button>
         )}
       </div>
 
-      {/* 4 Clean Filter Inputs */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+      {/* 4 Clean Filter Inputs with enhanced sizing */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         {/* Filter 1: ID */}
         <div className="relative flex items-center">
           <input
@@ -127,9 +127,9 @@ const EmployeeList = () => {
             placeholder="Employee No (e.g. EMP-001)"
             value={idFilter}
             onChange={(e) => setIdFilter(e.target.value)}
-            className="soft-input pr-10"
+            className="soft-input pr-11 text-sm font-medium"
           />
-          <span className="absolute right-3.5 text-gray-400 font-mono text-base select-none pointer-events-none">
+          <span className="absolute right-4 text-gray-400 font-mono text-lg select-none pointer-events-none font-bold">
             ≈
           </span>
         </div>
@@ -141,9 +141,9 @@ const EmployeeList = () => {
             placeholder="Name or Calling Name"
             value={nameFilter}
             onChange={(e) => setNameFilter(e.target.value)}
-            className="soft-input pr-10"
+            className="soft-input pr-11 text-sm font-medium"
           />
-          <span className="absolute right-3.5 text-gray-400 font-mono text-base select-none pointer-events-none">
+          <span className="absolute right-4 text-gray-400 font-mono text-lg select-none pointer-events-none font-bold">
             ≈
           </span>
         </div>
@@ -155,9 +155,9 @@ const EmployeeList = () => {
             placeholder="Division / Department"
             value={divisionFilter}
             onChange={(e) => setDivisionFilter(e.target.value)}
-            className="soft-input pr-10"
+            className="soft-input pr-11 text-sm font-medium"
           />
-          <span className="absolute right-3.5 text-gray-400 font-mono text-base select-none pointer-events-none">
+          <span className="absolute right-4 text-gray-400 font-mono text-lg select-none pointer-events-none font-bold">
             ≈
           </span>
         </div>
@@ -167,7 +167,7 @@ const EmployeeList = () => {
           <select
             value={shiftFilter}
             onChange={(e) => setShiftFilter(e.target.value)}
-            className="soft-input cursor-pointer"
+            className="soft-input cursor-pointer text-sm font-medium"
           >
             <option value="All">All Shifts</option>
             <option value="Day">Day Shift</option>
@@ -179,51 +179,51 @@ const EmployeeList = () => {
 
       {/* Main Table or Empty State */}
       {filteredEmployees.length === 0 ? (
-        <div className="bg-white border border-gray-100 rounded-3xl py-24 flex flex-col items-center justify-center text-center shadow-xs">
-          <div className="w-14 h-14 rounded-full bg-gray-50 border border-gray-100 flex items-center justify-center text-gray-400 mb-4">
-            <User size={26} />
+        <div className="bg-white border border-gray-200/90 rounded-3xl py-28 flex flex-col items-center justify-center text-center shadow-xs">
+          <div className="w-16 h-16 rounded-full bg-gray-50 border border-gray-200 flex items-center justify-center text-gray-400 mb-4">
+            <User size={30} />
           </div>
-          <h3 className="text-base font-semibold text-gray-900">No Employee found</h3>
-          <p className="text-xs text-gray-400 mt-1 max-w-sm">
+          <h3 className="text-lg font-bold text-gray-900">No Employee found</h3>
+          <p className="text-sm text-gray-400 mt-1 max-w-sm">
             Clear the filters to see all records or create a new employee profile.
           </p>
 
-          <div className="flex items-center gap-2.5 mt-6">
+          <div className="flex items-center gap-3 mt-6">
             {canManageEmployees && (
               <button
                 onClick={() => navigate('/employees/new')}
-                className="flex items-center gap-1.5 px-4 py-2 border border-gray-200 rounded-xl text-xs font-medium text-gray-700 hover:bg-gray-50 transition-colors"
+                className="flex items-center gap-2 px-5 py-2.5 border border-gray-200 rounded-xl text-sm font-semibold text-gray-700 hover:bg-gray-50 transition-colors"
               >
-                <Plus size={13} />
+                <Plus size={15} />
                 Create
               </button>
             )}
 
             <button
               onClick={clearFilters}
-              className="flex items-center gap-1.5 px-4 py-2 border border-gray-200 rounded-xl text-xs font-medium text-gray-700 hover:bg-gray-50 transition-colors"
+              className="flex items-center gap-2 px-5 py-2.5 border border-gray-200 rounded-xl text-sm font-semibold text-gray-700 hover:bg-gray-50 transition-colors"
             >
               Clear Filters
             </button>
           </div>
         </div>
       ) : (
-        /* Populated Employee Records Table */
-        <div className="bg-white border border-gray-200/80 rounded-2xl overflow-hidden shadow-xs">
+        /* Populated Employee Records Table - Enlarged and High Readability */
+        <div className="bg-white border border-gray-200 rounded-3xl overflow-hidden shadow-xs">
           <div className="overflow-x-auto">
             <table className="w-full text-left border-collapse">
               <thead>
-                <tr className="border-b border-gray-100 bg-gray-50/70 text-[11px] font-semibold text-gray-500 uppercase tracking-wider">
-                  <th className="py-3 px-5">Emp No</th>
-                  <th className="py-3 px-5">Employee Name</th>
-                  <th className="py-3 px-5">Division</th>
-                  <th className="py-3 px-5">Designation</th>
-                  <th className="py-3 px-5">Based Shift & Timings</th>
-                  <th className="py-3 px-5">Status / Term</th>
-                  <th className="py-3 px-5 text-right">Actions</th>
+                <tr className="border-b border-gray-200 bg-gray-50/80 text-xs font-bold text-gray-600 uppercase tracking-wider">
+                  <th className="py-4.5 px-6">Emp No</th>
+                  <th className="py-4.5 px-6">Employee Name</th>
+                  <th className="py-4.5 px-6">Division</th>
+                  <th className="py-4.5 px-6">Designation</th>
+                  <th className="py-4.5 px-6">Based Shift & Timings</th>
+                  <th className="py-4.5 px-6">Status / Term</th>
+                  <th className="py-4.5 px-6 text-right">Actions</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-gray-100 text-xs">
+              <tbody className="divide-y divide-gray-100 text-sm">
                 {filteredEmployees.map((emp) => {
                   const empNo = emp.employeeNo || emp.employeeId;
                   const fullName = emp.fullName || `${emp.firstName || ''} ${emp.lastName || ''}`.trim();
@@ -232,81 +232,81 @@ const EmployeeList = () => {
                   const isNight = shift === 'Night';
 
                   return (
-                    <tr key={emp.id} className="hover:bg-gray-50/60 transition-colors">
-                      <td className="py-3.5 px-5 font-mono font-medium text-gray-900">
+                    <tr key={emp.id} className="hover:bg-blue-50/20 transition-colors">
+                      <td className="py-5 px-6 font-mono font-bold text-sm text-gray-900">
                         {empNo}
                       </td>
-                      <td className="py-3.5 px-5">
-                        <div className="font-medium text-gray-900">{fullName}</div>
+                      <td className="py-5 px-6">
+                        <div className="font-semibold text-base text-gray-950">{fullName}</div>
                         {callingName && (
-                          <div className="text-[11px] text-gray-500">
-                            Calling name: <span className="font-semibold text-gray-700">{callingName}</span>
+                          <div className="text-xs text-gray-500 mt-0.5">
+                            Calling name: <span className="font-semibold text-gray-800">{callingName}</span>
                           </div>
                         )}
                       </td>
-                      <td className="py-3.5 px-5 text-gray-700 font-medium">
+                      <td className="py-5 px-6 text-sm font-semibold text-gray-800">
                         {emp.division || emp.department || '—'}
                       </td>
-                      <td className="py-3.5 px-5 text-gray-600">
+                      <td className="py-5 px-6 text-sm text-gray-700">
                         {emp.designation || '—'}
                       </td>
-                      <td className="py-3.5 px-5">
-                        <div className="flex flex-col gap-1 items-start">
-                          <span className={`inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-semibold ${
+                      <td className="py-5 px-6">
+                        <div className="flex flex-col gap-1.5 items-start">
+                          <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold ${
                             isNight
-                              ? 'bg-indigo-50 text-indigo-700 border border-indigo-100'
-                              : 'bg-amber-50 text-amber-700 border border-amber-100'
+                              ? 'bg-indigo-50 text-indigo-700 border border-indigo-200'
+                              : 'bg-amber-50 text-amber-700 border border-amber-200'
                           }`}>
-                            {isNight ? <Moon size={11} /> : <Sun size={11} />}
+                            {isNight ? <Moon size={13} /> : <Sun size={13} />}
                             {shift} Shift
                           </span>
                           {emp.shiftTimings && (
-                            <span className="text-[10px] text-gray-500 flex items-center gap-1">
-                              <Clock size={10} />
+                            <span className="text-xs text-gray-500 flex items-center gap-1.5 font-medium">
+                              <Clock size={12} className="text-gray-400" />
                               {emp.shiftTimings}
                             </span>
                           )}
                         </div>
                       </td>
-                      <td className="py-3.5 px-5">
+                      <td className="py-5 px-6">
                         <div className="flex flex-col gap-1 items-start">
-                          <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-semibold ${
+                          <span className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-bold ${
                             emp.employmentStatus === 'Permanent'
-                              ? 'bg-emerald-50 text-emerald-700 border border-emerald-100'
-                              : 'bg-blue-50 text-blue-700 border border-blue-100'
+                              ? 'bg-emerald-50 text-emerald-700 border border-emerald-200'
+                              : 'bg-blue-50 text-blue-700 border border-blue-200'
                           }`}>
                             {emp.employmentStatus || 'Probation'}
                           </span>
-                          <span className="text-[10px] text-gray-400">
+                          <span className="text-xs text-gray-500 font-medium pl-1">
                             {emp.status || 'Active'}
                           </span>
                         </div>
                       </td>
-                      <td className="py-3.5 px-5 text-right">
-                        <div className="flex items-center justify-end gap-1.5">
+                      <td className="py-5 px-6 text-right">
+                        <div className="flex items-center justify-end gap-2">
                           <button
                             onClick={() => setViewModalEmployee(emp)}
-                            className="p-1.5 text-gray-500 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors cursor-pointer"
+                            className="p-2 text-gray-500 hover:text-blue-600 hover:bg-blue-50 rounded-xl transition-colors cursor-pointer"
                             title="View Full Profile (21 Fields)"
                           >
-                            <Eye size={15} />
+                            <Eye size={18} />
                           </button>
 
                           {canManageEmployees && (
                             <>
                               <button
                                 onClick={() => navigate(`/employees/edit/${emp.id}`)}
-                                className="p-1.5 text-gray-500 hover:text-emerald-600 hover:bg-emerald-50 rounded-lg transition-colors cursor-pointer"
+                                className="p-2 text-gray-500 hover:text-emerald-600 hover:bg-emerald-50 rounded-xl transition-colors cursor-pointer"
                                 title="Edit Employee"
                               >
-                                <Edit3 size={15} />
+                                <Edit3 size={18} />
                               </button>
                               <button
                                 onClick={() => handleDelete(emp.id, empNo)}
-                                className="p-1.5 text-gray-500 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors cursor-pointer"
+                                className="p-2 text-gray-500 hover:text-red-600 hover:bg-red-50 rounded-xl transition-colors cursor-pointer"
                                 title="Delete Employee"
                               >
-                                <Trash2 size={15} />
+                                <Trash2 size={18} />
                               </button>
                             </>
                           )}
@@ -321,175 +321,175 @@ const EmployeeList = () => {
         </div>
       )}
 
-      {/* View 21-Field Employee Details Modal */}
+      {/* View 21-Field Employee Details Modal - Enhanced Sizing */}
       {viewModalEmployee && (
-        <div className="fixed inset-0 z-50 bg-black/40 backdrop-blur-xs flex items-center justify-center p-4">
-          <div className="bg-white rounded-3xl max-w-3xl w-full max-h-[90vh] overflow-y-auto shadow-2xl border border-gray-100 animate-in fade-in zoom-in-95 duration-200">
+        <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-xs flex items-center justify-center p-4">
+          <div className="bg-white rounded-3xl max-w-4xl w-full max-h-[92vh] overflow-y-auto shadow-2xl border border-gray-100 animate-in fade-in zoom-in-95 duration-200">
             {/* Modal Header */}
-            <div className="p-6 border-b border-gray-100 flex items-center justify-between sticky top-0 bg-white/95 backdrop-blur-xs z-10">
-              <div className="flex items-center gap-3">
-                <div className="w-11 h-11 rounded-2xl bg-blue-50 border border-blue-100 flex items-center justify-center text-blue-600 font-bold">
+            <div className="p-6 sm:p-7 border-b border-gray-100 flex items-center justify-between sticky top-0 bg-white/95 backdrop-blur-xs z-10">
+              <div className="flex items-center gap-4">
+                <div className="w-13 h-13 rounded-2xl bg-blue-50 border border-blue-100 flex items-center justify-center text-blue-600 text-xl font-bold">
                   {viewModalEmployee.callingName ? viewModalEmployee.callingName[0] : 'E'}
                 </div>
                 <div>
-                  <div className="flex items-center gap-2">
-                    <h3 className="text-lg font-bold text-gray-900">
+                  <div className="flex items-center gap-2.5">
+                    <h3 className="text-xl sm:text-2xl font-bold text-gray-950">
                       {viewModalEmployee.fullName || `${viewModalEmployee.firstName || ''} ${viewModalEmployee.lastName || ''}`}
                     </h3>
-                    <span className="font-mono text-xs bg-gray-100 text-gray-700 px-2 py-0.5 rounded-md font-semibold">
+                    <span className="font-mono text-sm bg-gray-100 text-gray-800 px-2.5 py-0.5 rounded-lg font-bold border border-gray-200">
                       {viewModalEmployee.employeeNo || viewModalEmployee.employeeId}
                     </span>
                   </div>
-                  <p className="text-xs text-gray-500">
-                    Calling Name: <span className="text-gray-900 font-semibold">{viewModalEmployee.callingName || '—'}</span> • {viewModalEmployee.designation || 'Staff'}
+                  <p className="text-sm text-gray-500 mt-0.5">
+                    Calling Name: <span className="text-gray-950 font-bold">{viewModalEmployee.callingName || '—'}</span> • <span className="text-gray-700 font-medium">{viewModalEmployee.designation || 'Staff'}</span>
                   </p>
                 </div>
               </div>
               <button
                 onClick={() => setViewModalEmployee(null)}
-                className="p-2 text-gray-400 hover:text-gray-700 hover:bg-gray-100 rounded-full transition-colors cursor-pointer"
+                className="p-2.5 text-gray-400 hover:text-gray-700 hover:bg-gray-100 rounded-full transition-colors cursor-pointer"
               >
-                <X size={18} />
+                <X size={20} />
               </button>
             </div>
 
             {/* Modal Body - 21 Fields Structured */}
-            <div className="p-6 space-y-6">
+            <div className="p-6 sm:p-8 space-y-7">
               {/* Group 1: Organization & Shift */}
-              <div className="bg-gray-50/70 border border-gray-100 rounded-2xl p-4 space-y-3">
-                <h4 className="text-xs font-bold text-gray-500 uppercase tracking-wider flex items-center gap-1.5">
-                  <Building size={14} className="text-blue-600" />
+              <div className="bg-gray-50/80 border border-gray-200/80 rounded-2xl p-5 space-y-4">
+                <h4 className="text-xs font-bold text-gray-600 uppercase tracking-wider flex items-center gap-2">
+                  <Building size={16} className="text-blue-600" />
                   Organization & Shift Details
                 </h4>
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-xs">
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-5">
                   <div>
-                    <span className="text-gray-400 block text-[11px]">Division</span>
-                    <span className="font-medium text-gray-800">{viewModalEmployee.division || viewModalEmployee.department || '—'}</span>
+                    <span className="text-gray-400 block text-xs font-medium">Division</span>
+                    <span className="font-bold text-sm text-gray-900 mt-0.5 block">{viewModalEmployee.division || viewModalEmployee.department || '—'}</span>
                   </div>
                   <div>
-                    <span className="text-gray-400 block text-[11px]">Designation</span>
-                    <span className="font-medium text-gray-800">{viewModalEmployee.designation || '—'}</span>
+                    <span className="text-gray-400 block text-xs font-medium">Designation</span>
+                    <span className="font-bold text-sm text-gray-900 mt-0.5 block">{viewModalEmployee.designation || '—'}</span>
                   </div>
                   <div>
-                    <span className="text-gray-400 block text-[11px]">Based Shift</span>
-                    <span className="font-semibold text-blue-700">{viewModalEmployee.basedShift || viewModalEmployee.shiftType || 'Day'}</span>
+                    <span className="text-gray-400 block text-xs font-medium">Based Shift</span>
+                    <span className="font-bold text-sm text-blue-700 mt-0.5 block">{viewModalEmployee.basedShift || viewModalEmployee.shiftType || 'Day'}</span>
                   </div>
                   <div>
-                    <span className="text-gray-400 block text-[11px]">Shift Timings</span>
-                    <span className="font-medium text-gray-800">{viewModalEmployee.shiftTimings || 'Standard'}</span>
+                    <span className="text-gray-400 block text-xs font-medium">Shift Timings</span>
+                    <span className="font-bold text-sm text-gray-900 mt-0.5 block">{viewModalEmployee.shiftTimings || 'Standard'}</span>
                   </div>
                   <div>
-                    <span className="text-gray-400 block text-[11px]">Employment Status</span>
-                    <span className="font-semibold text-emerald-700">{viewModalEmployee.employmentStatus || 'Probation'}</span>
+                    <span className="text-gray-400 block text-xs font-medium">Employment Status</span>
+                    <span className="font-bold text-sm text-emerald-700 mt-0.5 block">{viewModalEmployee.employmentStatus || 'Probation'}</span>
                   </div>
                   <div>
-                    <span className="text-gray-400 block text-[11px]">Joining Date</span>
-                    <span className="font-medium text-gray-800">{viewModalEmployee.joiningDate || viewModalEmployee.dateOfJoining || '—'}</span>
+                    <span className="text-gray-400 block text-xs font-medium">Joining Date</span>
+                    <span className="font-bold text-sm text-gray-900 mt-0.5 block">{viewModalEmployee.joiningDate || viewModalEmployee.dateOfJoining || '—'}</span>
                   </div>
                   <div>
-                    <span className="text-gray-400 block text-[11px]">Resigned Date</span>
-                    <span className="font-medium text-gray-800">{viewModalEmployee.resignedDate || viewModalEmployee.relievingDate || 'N/A'}</span>
+                    <span className="text-gray-400 block text-xs font-medium">Resigned Date</span>
+                    <span className="font-bold text-sm text-gray-900 mt-0.5 block">{viewModalEmployee.resignedDate || viewModalEmployee.relievingDate || 'N/A'}</span>
                   </div>
                   <div>
-                    <span className="text-gray-400 block text-[11px]">Overall Status</span>
-                    <span className="font-medium text-gray-800">{viewModalEmployee.status || 'Active'}</span>
+                    <span className="text-gray-400 block text-xs font-medium">Overall Status</span>
+                    <span className="font-bold text-sm text-gray-900 mt-0.5 block">{viewModalEmployee.status || 'Active'}</span>
                   </div>
                 </div>
               </div>
 
               {/* Group 2: Personal Identity */}
-              <div className="bg-gray-50/70 border border-gray-100 rounded-2xl p-4 space-y-3">
-                <h4 className="text-xs font-bold text-gray-500 uppercase tracking-wider flex items-center gap-1.5">
-                  <User size={14} className="text-emerald-600" />
+              <div className="bg-gray-50/80 border border-gray-200/80 rounded-2xl p-5 space-y-4">
+                <h4 className="text-xs font-bold text-gray-600 uppercase tracking-wider flex items-center gap-2">
+                  <User size={16} className="text-emerald-600" />
                   Personal Identity
                 </h4>
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-xs">
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-5">
                   <div>
-                    <span className="text-gray-400 block text-[11px]">Gender</span>
-                    <span className="font-medium text-gray-800">{viewModalEmployee.gender || '—'}</span>
+                    <span className="text-gray-400 block text-xs font-medium">Gender</span>
+                    <span className="font-bold text-sm text-gray-900 mt-0.5 block">{viewModalEmployee.gender || '—'}</span>
                   </div>
                   <div>
-                    <span className="text-gray-400 block text-[11px]">Birthdate</span>
-                    <span className="font-medium text-gray-800">{viewModalEmployee.birthDate || viewModalEmployee.dateOfBirth || '—'}</span>
+                    <span className="text-gray-400 block text-xs font-medium">Birthdate</span>
+                    <span className="font-bold text-sm text-gray-900 mt-0.5 block">{viewModalEmployee.birthDate || viewModalEmployee.dateOfBirth || '—'}</span>
                   </div>
                   <div>
-                    <span className="text-gray-400 block text-[11px]">Civil Status</span>
-                    <span className="font-medium text-gray-800">{viewModalEmployee.civilStatus || viewModalEmployee.maritalStatus || 'Single'}</span>
+                    <span className="text-gray-400 block text-xs font-medium">Civil Status</span>
+                    <span className="font-bold text-sm text-gray-900 mt-0.5 block">{viewModalEmployee.civilStatus || viewModalEmployee.maritalStatus || 'Single'}</span>
                   </div>
                   <div>
-                    <span className="text-gray-400 block text-[11px]">NIC Number</span>
+                    <span className="text-gray-400 block text-xs font-medium">NIC Number</span>
                     {isViewer ? (
-                      <span className="text-gray-400 italic font-mono">[Restricted]</span>
+                      <span className="text-gray-400 italic font-mono text-sm">[Restricted]</span>
                     ) : (
-                      <span className="font-mono font-medium text-gray-800">{viewModalEmployee.nicNumber || viewModalEmployee.nationalId || '—'}</span>
+                      <span className="font-mono font-bold text-sm text-gray-900 mt-0.5 block">{viewModalEmployee.nicNumber || viewModalEmployee.nationalId || '—'}</span>
                     )}
                   </div>
                 </div>
               </div>
 
               {/* Group 3: Contact & Address */}
-              <div className="bg-gray-50/70 border border-gray-100 rounded-2xl p-4 space-y-3">
-                <h4 className="text-xs font-bold text-gray-500 uppercase tracking-wider flex items-center gap-1.5">
-                  <MapPin size={14} className="text-indigo-600" />
+              <div className="bg-gray-50/80 border border-gray-200/80 rounded-2xl p-5 space-y-4">
+                <h4 className="text-xs font-bold text-gray-600 uppercase tracking-wider flex items-center gap-2">
+                  <MapPin size={16} className="text-indigo-600" />
                   Contact & Addresses
                 </h4>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                   <div>
-                    <span className="text-gray-400 block text-[11px]">Email</span>
-                    <span className="font-medium text-gray-800">{viewModalEmployee.email || viewModalEmployee.companyEmail || '—'}</span>
+                    <span className="text-gray-400 block text-xs font-medium">Email</span>
+                    <span className="font-bold text-sm text-gray-900 mt-0.5 block">{viewModalEmployee.email || viewModalEmployee.companyEmail || '—'}</span>
                   </div>
                   <div>
-                    <span className="text-gray-400 block text-[11px]">Contact Number</span>
-                    <span className="font-medium text-gray-800">{viewModalEmployee.contactNumber || viewModalEmployee.mobile || '—'}</span>
+                    <span className="text-gray-400 block text-xs font-medium">Contact Number</span>
+                    <span className="font-bold text-sm text-gray-900 mt-0.5 block">{viewModalEmployee.contactNumber || viewModalEmployee.mobile || '—'}</span>
                   </div>
                   <div>
-                    <span className="text-gray-400 block text-[11px]">Resident Address (Current)</span>
+                    <span className="text-gray-400 block text-xs font-medium">Resident Address (Current)</span>
                     {isViewer ? (
-                      <span className="text-gray-400 italic">[Restricted]</span>
+                      <span className="text-gray-400 italic text-sm">[Restricted]</span>
                     ) : (
-                      <span className="font-medium text-gray-800">{viewModalEmployee.residentAddress || viewModalEmployee.currentAddress || '—'}</span>
+                      <span className="font-semibold text-sm text-gray-900 mt-0.5 block">{viewModalEmployee.residentAddress || viewModalEmployee.currentAddress || '—'}</span>
                     )}
                   </div>
                   <div>
-                    <span className="text-gray-400 block text-[11px]">Permanent Address (Hometown)</span>
+                    <span className="text-gray-400 block text-xs font-medium">Permanent Address (Hometown)</span>
                     {isViewer ? (
-                      <span className="text-gray-400 italic">[Restricted]</span>
+                      <span className="text-gray-400 italic text-sm">[Restricted]</span>
                     ) : (
-                      <span className="font-medium text-gray-800">{viewModalEmployee.permanentAddress || '—'}</span>
+                      <span className="font-semibold text-sm text-gray-900 mt-0.5 block">{viewModalEmployee.permanentAddress || '—'}</span>
                     )}
                   </div>
                 </div>
               </div>
 
               {/* Group 4: Emergency & Compensation */}
-              <div className="bg-gray-50/70 border border-gray-100 rounded-2xl p-4 space-y-3">
-                <h4 className="text-xs font-bold text-gray-500 uppercase tracking-wider flex items-center gap-1.5">
-                  <Shield size={14} className="text-amber-600" />
+              <div className="bg-gray-50/80 border border-gray-200/80 rounded-2xl p-5 space-y-4">
+                <h4 className="text-xs font-bold text-gray-600 uppercase tracking-wider flex items-center gap-2">
+                  <Shield size={16} className="text-amber-600" />
                   Emergency & Confidential Compensation
                 </h4>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
                   <div>
-                    <span className="text-gray-400 block text-[11px]">Emergency Contact</span>
+                    <span className="text-gray-400 block text-xs font-medium">Emergency Contact</span>
                     {isViewer ? (
-                      <span className="text-gray-400 italic">[Restricted]</span>
+                      <span className="text-gray-400 italic text-sm">[Restricted]</span>
                     ) : (
-                      <span className="font-medium text-gray-800">{viewModalEmployee.emergencyContact || viewModalEmployee.emergencyPhone || '—'}</span>
+                      <span className="font-bold text-sm text-gray-900 mt-0.5 block">{viewModalEmployee.emergencyContact || viewModalEmployee.emergencyPhone || '—'}</span>
                     )}
                   </div>
                   <div>
-                    <span className="text-gray-400 block text-[11px]">Relationship</span>
+                    <span className="text-gray-400 block text-xs font-medium">Relationship</span>
                     {isViewer ? (
-                      <span className="text-gray-400 italic">[Restricted]</span>
+                      <span className="text-gray-400 italic text-sm">[Restricted]</span>
                     ) : (
-                      <span className="font-medium text-gray-800">{viewModalEmployee.relationship || viewModalEmployee.emergencyRelation || '—'}</span>
+                      <span className="font-bold text-sm text-gray-900 mt-0.5 block">{viewModalEmployee.relationship || viewModalEmployee.emergencyRelation || '—'}</span>
                     )}
                   </div>
                   <div>
-                    <span className="text-gray-400 block text-[11px]">Salary</span>
+                    <span className="text-gray-400 block text-xs font-medium">Monthly Salary</span>
                     {isViewer ? (
-                      <span className="text-gray-400 italic">[Restricted - Viewer]</span>
+                      <span className="text-gray-400 italic text-sm">[Restricted - Viewer]</span>
                     ) : (
-                      <span className="font-mono font-bold text-emerald-700">
+                      <span className="font-mono font-bold text-base text-emerald-700 mt-0.5 block">
                         {viewModalEmployee.salary !== undefined && viewModalEmployee.salary !== null
                           ? `$${Number(viewModalEmployee.salary).toLocaleString()}`
                           : (viewModalEmployee.basicSalary ? `$${Number(viewModalEmployee.basicSalary).toLocaleString()}` : '—')}
@@ -501,7 +501,7 @@ const EmployeeList = () => {
             </div>
 
             {/* Modal Footer */}
-            <div className="p-4 border-t border-gray-100 flex items-center justify-end gap-2 bg-gray-50/50">
+            <div className="p-5 sm:p-6 border-t border-gray-100 flex items-center justify-end gap-3 bg-gray-50/60">
               {canManageEmployees && (
                 <button
                   onClick={() => {
@@ -509,15 +509,15 @@ const EmployeeList = () => {
                     setViewModalEmployee(null);
                     navigate(`/employees/edit/${empId}`);
                   }}
-                  className="px-4 py-2 bg-blue-600 text-white rounded-xl text-xs font-medium hover:bg-blue-700 transition-colors cursor-pointer flex items-center gap-1.5"
+                  className="px-5 py-2.5 bg-blue-600 text-white rounded-xl text-sm font-semibold hover:bg-blue-700 transition-colors cursor-pointer flex items-center gap-2 shadow-xs"
                 >
-                  <Edit3 size={14} />
+                  <Edit3 size={16} />
                   <span>Edit Profile</span>
                 </button>
               )}
               <button
                 onClick={() => setViewModalEmployee(null)}
-                className="px-5 py-2 bg-gray-900 text-white rounded-xl text-xs font-medium hover:bg-black transition-colors cursor-pointer"
+                className="px-6 py-2.5 bg-gray-900 text-white rounded-xl text-sm font-semibold hover:bg-black transition-colors cursor-pointer shadow-xs"
               >
                 Close
               </button>

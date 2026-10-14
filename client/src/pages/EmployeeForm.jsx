@@ -219,7 +219,7 @@ const EmployeeForm = () => {
         <div className="bg-white border border-gray-200/80 rounded-2xl p-6 shadow-xs space-y-5">
           <div className="flex items-center gap-2 border-b border-gray-100 pb-3">
             <Building2 className="text-blue-600" size={18} />
-            <h2 className="text-sm font-semibold text-gray-900 uppercase tracking-wider">
+            <h2 className="text-base font-bold text-gray-900 uppercase tracking-wider">
               1. Organization & Shift Details
             </h2>
           </div>
@@ -227,7 +227,7 @@ const EmployeeForm = () => {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
             {/* Field 1: Employee No */}
             <div>
-              <label className="block text-xs font-semibold text-gray-700 mb-1.5">
+              <label className="block text-sm font-semibold text-gray-800 mb-2">
                 Employee No <span className="text-red-500">*</span>
               </label>
               <input
@@ -243,7 +243,7 @@ const EmployeeForm = () => {
 
             {/* Field 2: Division */}
             <div>
-              <label className="block text-xs font-semibold text-gray-700 mb-1.5">
+              <label className="block text-sm font-semibold text-gray-800 mb-2">
                 Division
               </label>
               <input
@@ -258,7 +258,7 @@ const EmployeeForm = () => {
 
             {/* Field 3: Designation */}
             <div>
-              <label className="block text-xs font-semibold text-gray-700 mb-1.5">
+              <label className="block text-sm font-semibold text-gray-800 mb-2">
                 Designation
               </label>
               <input
@@ -273,7 +273,7 @@ const EmployeeForm = () => {
 
             {/* Field 4: Based Shift */}
             <div>
-              <label className="block text-xs font-semibold text-gray-700 mb-1.5">
+              <label className="block text-sm font-semibold text-gray-800 mb-2">
                 Based Shift
               </label>
               <select
@@ -290,7 +290,7 @@ const EmployeeForm = () => {
 
             {/* Field 19: Shift Timings */}
             <div>
-              <label className="block text-xs font-semibold text-gray-700 mb-1.5">
+              <label className="block text-sm font-semibold text-gray-800 mb-2">
                 Shift Timings
               </label>
               <input
@@ -305,7 +305,7 @@ const EmployeeForm = () => {
 
             {/* Field 21: Permanent / Probation */}
             <div>
-              <label className="block text-xs font-semibold text-gray-700 mb-1.5">
+              <label className="block text-sm font-semibold text-gray-800 mb-2">
                 Permanent / Probation
               </label>
               <select
@@ -321,7 +321,7 @@ const EmployeeForm = () => {
 
             {/* Field 5: Joining date */}
             <div>
-              <label className="block text-xs font-semibold text-gray-700 mb-1.5">
+              <label className="block text-sm font-semibold text-gray-800 mb-2">
                 Joining Date
               </label>
               <input
@@ -335,7 +335,7 @@ const EmployeeForm = () => {
 
             {/* Field 6: Resigned date */}
             <div>
-              <label className="block text-xs font-semibold text-gray-700 mb-1.5">
+              <label className="block text-sm font-semibold text-gray-800 mb-2">
                 Resigned Date (If Applicable)
               </label>
               <input
@@ -349,7 +349,7 @@ const EmployeeForm = () => {
 
             {/* Status */}
             <div>
-              <label className="block text-xs font-semibold text-gray-700 mb-1.5">
+              <label className="block text-sm font-semibold text-gray-800 mb-2">
                 Record Status
               </label>
               <select
@@ -370,7 +370,7 @@ const EmployeeForm = () => {
         <div className="bg-white border border-gray-200/80 rounded-2xl p-6 shadow-xs space-y-5">
           <div className="flex items-center gap-2 border-b border-gray-100 pb-3">
             <User className="text-emerald-600" size={18} />
-            <h2 className="text-sm font-semibold text-gray-900 uppercase tracking-wider">
+            <h2 className="text-base font-bold text-gray-900 uppercase tracking-wider">
               2. Personal Identity & Bio
             </h2>
           </div>
@@ -378,7 +378,7 @@ const EmployeeForm = () => {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
             {/* Field 7: Employee Full Name */}
             <div className="md:col-span-2">
-              <label className="block text-xs font-semibold text-gray-700 mb-1.5">
+              <label className="block text-sm font-semibold text-gray-800 mb-2">
                 Employee Full Name <span className="text-red-500">*</span>
               </label>
               <input
@@ -394,7 +394,7 @@ const EmployeeForm = () => {
 
             {/* Field 8: Calling name */}
             <div>
-              <label className="block text-xs font-semibold text-gray-700 mb-1.5">
+              <label className="block text-sm font-semibold text-gray-800 mb-2">
                 Calling Name
               </label>
               <input
@@ -409,7 +409,7 @@ const EmployeeForm = () => {
 
             {/* Field 12: NIC Number */}
             <div>
-              <label className="block text-xs font-semibold text-gray-700 mb-1.5">
+              <label className="block text-sm font-semibold text-gray-800 mb-2">
                 NIC Number (Confidential)
               </label>
               <input
@@ -424,7 +424,7 @@ const EmployeeForm = () => {
 
             {/* Field 11: Birthdate */}
             <div>
-              <label className="block text-xs font-semibold text-gray-700 mb-1.5">
+              <label className="block text-sm font-semibold text-gray-800 mb-2">
                 Birthdate
               </label>
               <input
@@ -438,7 +438,7 @@ const EmployeeForm = () => {
 
             {/* Field 13: Gender */}
             <div>
-              <label className="block text-xs font-semibold text-gray-700 mb-1.5">
+              <label className="block text-sm font-semibold text-gray-800 mb-2">
                 Gender
               </label>
               <select
@@ -455,7 +455,7 @@ const EmployeeForm = () => {
 
             {/* Field 14: Civil Status */}
             <div>
-              <label className="block text-xs font-semibold text-gray-700 mb-1.5">
+              <label className="block text-sm font-semibold text-gray-800 mb-2">
                 Civil Status
               </label>
               <select
@@ -477,7 +477,7 @@ const EmployeeForm = () => {
         <div className="bg-white border border-gray-200/80 rounded-2xl p-6 shadow-xs space-y-5">
           <div className="flex items-center gap-2 border-b border-gray-100 pb-3">
             <MapPin className="text-indigo-600" size={18} />
-            <h2 className="text-sm font-semibold text-gray-900 uppercase tracking-wider">
+            <h2 className="text-base font-bold text-gray-900 uppercase tracking-wider">
               3. Contact & Address Records
             </h2>
           </div>
@@ -485,7 +485,7 @@ const EmployeeForm = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
             {/* Field 15: Email */}
             <div>
-              <label className="block text-xs font-semibold text-gray-700 mb-1.5">
+              <label className="block text-sm font-semibold text-gray-800 mb-2">
                 Email Address
               </label>
               <input
@@ -500,7 +500,7 @@ const EmployeeForm = () => {
 
             {/* Field 16: Contact number */}
             <div>
-              <label className="block text-xs font-semibold text-gray-700 mb-1.5">
+              <label className="block text-sm font-semibold text-gray-800 mb-2">
                 Contact Number
               </label>
               <input
@@ -515,7 +515,7 @@ const EmployeeForm = () => {
 
             {/* Field 10: Resident Address */}
             <div>
-              <label className="block text-xs font-semibold text-gray-700 mb-1.5">
+              <label className="block text-sm font-semibold text-gray-800 mb-2">
                 Resident Address (Current)
               </label>
               <textarea
@@ -530,7 +530,7 @@ const EmployeeForm = () => {
 
             {/* Field 9: Permanent Address */}
             <div>
-              <label className="block text-xs font-semibold text-gray-700 mb-1.5">
+              <label className="block text-sm font-semibold text-gray-800 mb-2">
                 Permanent Address (Hometown)
               </label>
               <textarea
@@ -549,7 +549,7 @@ const EmployeeForm = () => {
         <div className="bg-white border border-gray-200/80 rounded-2xl p-6 shadow-xs space-y-5">
           <div className="flex items-center gap-2 border-b border-gray-100 pb-3">
             <ShieldCheck className="text-amber-600" size={18} />
-            <h2 className="text-sm font-semibold text-gray-900 uppercase tracking-wider">
+            <h2 className="text-base font-bold text-gray-900 uppercase tracking-wider">
               4. Emergency Contact & Confidential Compensation
             </h2>
           </div>
@@ -557,7 +557,7 @@ const EmployeeForm = () => {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
             {/* Field 17: Emergency contact */}
             <div>
-              <label className="block text-xs font-semibold text-gray-700 mb-1.5">
+              <label className="block text-sm font-semibold text-gray-800 mb-2">
                 Emergency Contact Number
               </label>
               <input
@@ -572,7 +572,7 @@ const EmployeeForm = () => {
 
             {/* Field 18: Relationship */}
             <div>
-              <label className="block text-xs font-semibold text-gray-700 mb-1.5">
+              <label className="block text-sm font-semibold text-gray-800 mb-2">
                 Relationship
               </label>
               <input

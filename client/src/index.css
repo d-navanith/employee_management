@@ -8,13 +8,15 @@
     margin: 0;
     padding: 0;
     min-height: 100vh;
+    font-size: 1rem;
+    line-height: 1.5;
   }
 }
 
 /* Custom scrollbars */
 ::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
+  width: 8px;
+  height: 8px;
 }
 ::-webkit-scrollbar-track {
   background: #f9fafb;
@@ -27,13 +29,14 @@
   background: #9ca3af;
 }
 
-/* Frappe / ERPNext styled smooth soft inputs */
+/* Frappe / ERPNext styled smooth soft inputs - enhanced sizing */
 .soft-input {
   background-color: #f3f4f6;
   border: 1px solid transparent;
-  border-radius: 0.75rem;
-  padding: 0.625rem 0.875rem;
-  font-size: 0.875rem;
+  border-radius: 0.875rem;
+  padding: 0.75rem 1.125rem;
+  font-size: 0.9375rem;
+  line-height: 1.4;
   color: #111827;
   transition: all 0.15s ease-in-out;
   width: 100%;
@@ -41,9 +44,9 @@
 
 .soft-input:focus {
   background-color: #ffffff;
-  border-color: #10b981;
+  border-color: #3b82f6;
   outline: none;
-  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.15);
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
 }
 
 .soft-input:disabled {
@@ -54,8 +57,8 @@
 
 .soft-label {
   display: block;
-  font-size: 0.8125rem;
-  font-weight: 500;
-  color: #4b5563;
-  margin-bottom: 0.375rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #374151;
+  margin-bottom: 0.5rem;
 }

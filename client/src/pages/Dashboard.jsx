@@ -101,7 +101,7 @@ const Dashboard = () => {
             <Sun size={18} />
           </div>
           <div className="text-3xl font-bold text-gray-900 mt-2">{stats.dayShiftWorkers}</div>
-          <span className="text-[11px] text-amber-800">Operational morning shift</span>
+          <span className="text-xs font-medium text-amber-800">Operational morning shift</span>
         </div>
 
         <div className="bg-indigo-50/70 border border-indigo-200/60 rounded-2xl p-5">
@@ -110,7 +110,7 @@ const Dashboard = () => {
             <Moon size={18} />
           </div>
           <div className="text-3xl font-bold text-gray-900 mt-2">{stats.nightShiftWorkers}</div>
-          <span className="text-[11px] text-indigo-800">Overnight manufacturing rotation</span>
+          <span className="text-xs font-medium text-indigo-800">Overnight manufacturing rotation</span>
         </div>
 
         <div className="bg-emerald-50/70 border border-emerald-200/60 rounded-2xl p-5">
@@ -119,7 +119,7 @@ const Dashboard = () => {
             <Briefcase size={18} />
           </div>
           <div className="text-3xl font-bold text-gray-900 mt-2">{stats.staffCount}</div>
-          <span className="text-[11px] text-emerald-800">Core administrative & executive</span>
+          <span className="text-xs font-medium text-emerald-800">Core administrative & executive</span>
         </div>
 
         <div className="bg-sky-50/70 border border-sky-200/60 rounded-2xl p-5">
@@ -128,7 +128,7 @@ const Dashboard = () => {
             <Users size={18} />
           </div>
           <div className="text-3xl font-bold text-gray-900 mt-2">{stats.workerCount}</div>
-          <span className="text-[11px] text-sky-800">Plant & field workforce</span>
+          <span className="text-xs font-medium text-sky-800">Plant & field workforce</span>
         </div>
       </div>
 
