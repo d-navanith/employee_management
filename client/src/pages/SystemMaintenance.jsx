@@ -8,7 +8,9 @@ import {
   CheckCircle, 
   Clock, 
   AlertTriangle,
-  Server
+  Server,
+  Eye,
+  EyeOff
 } from 'lucide-react';
 
 const SystemMaintenance = () => {
@@ -23,6 +25,7 @@ const SystemMaintenance = () => {
   const [savingSettings, setSavingSettings] = useState(false);
   const [backupLoading, setBackupLoading] = useState(false);
   const [noticeMessage, setNoticeMessage] = useState('');
+  const [showSecretCode, setShowSecretCode] = useState(false);
 
   const loadData = async () => {
     setLoading(true);
@@ -196,12 +199,23 @@ const SystemMaintenance = () => {
             <div className="mt-4 space-y-3">
               <div>
                 <label className="soft-label">Active Secret Code</label>
-                <input
-                  type="text"
-                  value={settings.superAdminSecretCode || 'HR7788'}
-                  onChange={(e) => setSettings({ ...settings, superAdminSecretCode: e.target.value })}
-                  className="soft-input text-xs font-mono font-bold text-blue-700 bg-blue-50/50 border border-blue-200"
-                />
+                <div className="relative">
+                  <input
+                    type={showSecretCode ? 'text' : 'password'}
+                    value={settings.superAdminSecretCode || 'HR7788'}
+                    onChange={(e) => setSettings({ ...settings, superAdminSecretCode: e.target.value })}
+                    className="soft-input text-sm font-mono font-bold text-blue-700 bg-blue-50/50 border border-blue-200 pr-10"
+                    placeholder="HR7788"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowSecretCode(!showSecretCode)}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-blue-600 transition-colors cursor-pointer p-1"
+                    title={showSecretCode ? 'Hide Secret Code' : 'Show Secret Code'}
+                  >
+                    {showSecretCode ? <EyeOff size={16} /> : <Eye size={16} />}
+                  </button>
+                </div>
               </div>
             </div>
           </div>

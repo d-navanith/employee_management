@@ -45,7 +45,9 @@ const Profile = () => {
   const [currentSecretCode, setCurrentSecretCode] = useState('');
   const [showSecretCode, setShowSecretCode] = useState(false);
   const [newSecretCode, setNewSecretCode] = useState('');
+  const [showNewSecretCode, setShowNewSecretCode] = useState(false);
   const [secretAuthPassword, setSecretAuthPassword] = useState('');
+  const [showSecretAuthPw, setShowSecretAuthPw] = useState(false);
   const [secretLoading, setSecretLoading] = useState(false);
   const [secretSuccess, setSecretSuccess] = useState('');
   const [secretError, setSecretError] = useState('');
@@ -492,28 +494,48 @@ const Profile = () => {
                 <label className="block text-sm font-semibold text-gray-800 mb-2">
                   New Secret Code <span className="text-red-500">*</span>
                 </label>
-                <input
-                  type="text"
-                  value={newSecretCode}
-                  onChange={(e) => setNewSecretCode(e.target.value)}
-                  placeholder="e.g. HR7788 or new custom code"
-                  required
-                  className="soft-input font-mono font-bold tracking-wider"
-                />
+                <div className="relative">
+                  <input
+                    type={showNewSecretCode ? 'text' : 'password'}
+                    value={newSecretCode}
+                    onChange={(e) => setNewSecretCode(e.target.value)}
+                    placeholder="e.g. HR7788 or new custom code"
+                    required
+                    className="soft-input font-mono font-bold tracking-wider pr-10"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowNewSecretCode(!showNewSecretCode)}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 cursor-pointer p-1"
+                    title={showNewSecretCode ? 'Hide code' : 'Show code'}
+                  >
+                    {showNewSecretCode ? <EyeOff size={18} /> : <Eye size={18} />}
+                  </button>
+                </div>
               </div>
 
               <div>
                 <label className="block text-sm font-semibold text-gray-800 mb-2">
                   Current Password (for Security Verification) <span className="text-red-500">*</span>
                 </label>
-                <input
-                  type="password"
-                  value={secretAuthPassword}
-                  onChange={(e) => setSecretAuthPassword(e.target.value)}
-                  placeholder="Enter your current password to confirm"
-                  required
-                  className="soft-input font-mono"
-                />
+                <div className="relative">
+                  <input
+                    type={showSecretAuthPw ? 'text' : 'password'}
+                    value={secretAuthPassword}
+                    onChange={(e) => setSecretAuthPassword(e.target.value)}
+                    placeholder="Enter your current password to confirm"
+                    required
+                    className="soft-input font-mono pr-10"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowSecretAuthPw(!showSecretAuthPw)}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 cursor-pointer p-1"
+                    title={showSecretAuthPw ? 'Hide password' : 'Show password'}
+                  >
+                    {showSecretAuthPw ? <EyeOff size={18} /> : <Eye size={18} />}
+                  </button>
+                </div>
               </div>
 
               <button

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import api from '../services/api';
-import { Shield, UserPlus, UserCheck, Eye, Trash2, Key, CheckCircle, AlertCircle } from 'lucide-react';
+import { Shield, UserPlus, UserCheck, Eye, EyeOff, Trash2, Key, CheckCircle, AlertCircle } from 'lucide-react';
 
 const UserRoles = () => {
   const [users, setUsers] = useState([]);
@@ -10,6 +10,7 @@ const UserRoles = () => {
 
   // Create user form
   const [showCreateModal, setShowCreateModal] = useState(false);
+  const [showNewUserPassword, setShowNewUserPassword] = useState(false);
   const [newUser, setNewUser] = useState({
     name: '',
     email: '',
@@ -242,14 +243,24 @@ const UserRoles = () => {
 
               <div>
                 <label className="soft-label">Password</label>
-                <input
-                  type="password"
-                  required
-                  placeholder="••••••••"
-                  value={newUser.password}
-                  onChange={(e) => setNewUser({ ...newUser, password: e.target.value })}
-                  className="soft-input"
-                />
+                <div className="relative">
+                  <input
+                    type={showNewUserPassword ? 'text' : 'password'}
+                    required
+                    placeholder="••••••••"
+                    value={newUser.password}
+                    onChange={(e) => setNewUser({ ...newUser, password: e.target.value })}
+                    className="soft-input pr-10"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowNewUserPassword(!showNewUserPassword)}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 cursor-pointer p-1"
+                    title={showNewUserPassword ? 'Hide password' : 'Show password'}
+                  >
+                    {showNewUserPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+                  </button>
+                </div>
               </div>
 
               <div>
