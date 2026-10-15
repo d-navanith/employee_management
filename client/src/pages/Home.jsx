@@ -17,19 +17,32 @@ const Home = () => {
   });
   const [loading, setLoading] = useState(true);
 
-  const fetchStats = async () => {
+  const fetchStats = async (isSilent = false) => {
+    if (!isSilent) setLoading(true);
     try {
       const res = await api.get('/stats/dashboard');
       setStats(res.data);
     } catch (err) {
       console.error('Failed to load stats', err);
     } finally {
-      setLoading(false);
+      if (!isSilent) setLoading(false);
     }
   };
 
   useEffect(() => {
-    fetchStats();
+    fetchStats(false);
+
+    // Auto-sync dashboard metrics on window focus and every 10 seconds
+    const handleFocus = () => fetchStats(true);
+    window.addEventListener('focus', handleFocus);
+    const interval = setInterval(() => {
+      fetchStats(true);
+    }, 10000);
+
+    return () => {
+      window.removeEventListener('focus', handleFocus);
+      clearInterval(interval);
+    };
   }, []);
 
   const getWelcomeTitle = () => {

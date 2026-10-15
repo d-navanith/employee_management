@@ -46,9 +46,9 @@ const EmployeeList = () => {
   // Selected employee for View Details modal
   const [viewModalEmployee, setViewModalEmployee] = useState(null);
 
-  const fetchEmployees = async (isManual = false) => {
+  const fetchEmployees = async (isManual = false, isSilent = false) => {
     if (isManual) setIsRefreshing(true);
-    else setLoading(true);
+    else if (!isSilent) setLoading(true);
 
     try {
       const res = await api.get('/employees');
@@ -64,13 +64,25 @@ const EmployeeList = () => {
         setTimeout(() => setRefreshNotice(''), 3000);
       }
     } finally {
-      setLoading(false);
+      if (!isSilent) setLoading(false);
       setIsRefreshing(false);
     }
   };
 
   useEffect(() => {
     fetchEmployees(false);
+
+    // Auto-sync directory on window focus and every 10 seconds
+    const handleFocus = () => fetchEmployees(false, true);
+    window.addEventListener('focus', handleFocus);
+    const interval = setInterval(() => {
+      fetchEmployees(false, true);
+    }, 10000);
+
+    return () => {
+      window.removeEventListener('focus', handleFocus);
+      clearInterval(interval);
+    };
   }, []);
 
   const handleDelete = async (id, empNo) => {
@@ -583,7 +595,10 @@ const EmployeeList = () => {
           <div className="bg-white rounded-3xl p-6 sm:p-8 max-w-5xl w-full max-h-[92vh] overflow-y-auto shadow-2xl relative">
             <ImportAutomation
               isModal={true}
-              onClose={() => setShowImportModal(false)}
+              onClose={() => {
+                setShowImportModal(false);
+                fetchEmployees(false, true);
+              }}
               onComplete={() => {
                 fetchEmployees(true);
               }}

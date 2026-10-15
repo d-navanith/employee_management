@@ -22,9 +22,9 @@ const Dashboard = () => {
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [syncNotice, setSyncNotice] = useState('');
 
-  const fetchStats = async (isManual = false) => {
+  const fetchStats = async (isManual = false, isSilent = false) => {
     if (isManual) setIsRefreshing(true);
-    else setLoading(true);
+    else if (!isSilent) setLoading(true);
 
     try {
       const res = await api.get('/stats/dashboard');
@@ -40,13 +40,25 @@ const Dashboard = () => {
         setTimeout(() => setSyncNotice(''), 2500);
       }
     } finally {
-      setLoading(false);
+      if (!isSilent) setLoading(false);
       setIsRefreshing(false);
     }
   };
 
   useEffect(() => {
     fetchStats(false);
+
+    // Auto-sync dashboard analytics on window focus and every 10 seconds
+    const handleFocus = () => fetchStats(false, true);
+    window.addEventListener('focus', handleFocus);
+    const interval = setInterval(() => {
+      fetchStats(false, true);
+    }, 10000);
+
+    return () => {
+      window.removeEventListener('focus', handleFocus);
+      clearInterval(interval);
+    };
   }, []);
 
   return (
