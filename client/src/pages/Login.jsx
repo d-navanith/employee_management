@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { User, Key, ShieldCheck, AlertCircle, Eye, EyeOff } from 'lucide-react';
@@ -16,6 +16,14 @@ const Login = () => {
 
   const { login } = useAuth();
   const navigate = useNavigate();
+
+  // Enforce "I am not a robot" security check before accessing login page
+  useEffect(() => {
+    const isSecurityPassed = sessionStorage.getItem('smarthr_security_passed');
+    if (isSecurityPassed !== 'true') {
+      navigate('/security-check', { replace: true, state: { from: '/login' } });
+    }
+  }, [navigate]);
 
   // Auto-reveal secret code field if user enters HR/Super Admin email or if server requested it
   const isHrAccount = requiresCode || email.toLowerCase().includes('hr@') || email.toLowerCase().includes('admin');
@@ -174,6 +182,12 @@ const Login = () => {
             >
               {loading ? 'Signing in...' : 'Sign in'}
             </button>
+          </div>
+
+          {/* Security Status Badge */}
+          <div className="pt-4 flex items-center justify-center gap-1.5 text-[11px] text-emerald-600 font-medium">
+            <ShieldCheck size={13} className="text-emerald-500" />
+            <span>Human Verification Passed</span>
           </div>
         </form>
       </div>

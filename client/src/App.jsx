@@ -13,13 +13,15 @@ import SystemMaintenance from './pages/SystemMaintenance';
 import UserRoles from './pages/UserRoles';
 import Profile from './pages/Profile';
 import ImportAutomation from './pages/ImportAutomation';
+import SecurityCheck from './pages/SecurityCheck';
 
 function App() {
   return (
     <AuthProvider>
       <BrowserRouter>
         <Routes>
-          {/* Public Login Route */}
+          {/* Public Security & Login Routes */}
+          <Route path="/security-check" element={<SecurityCheck />} />
           <Route path="/login" element={<Login />} />
 
           {/* Authenticated Layout Routes */}

@@ -17,6 +17,10 @@ const ProtectedRoute = ({ allowedRoles }) => {
   }
 
   if (!token || !user) {
+    const isSecurityPassed = sessionStorage.getItem('smarthr_security_passed');
+    if (isSecurityPassed !== 'true') {
+      return <Navigate to="/security-check" replace />;
+    }
     return <Navigate to="/login" replace />;
   }
 
