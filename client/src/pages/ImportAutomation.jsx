@@ -215,25 +215,54 @@ const ImportAutomation = ({ onClose, isModal = false, onComplete }) => {
         </div>
       </div>
 
-      {/* Success Completion Banner */}
+      {/* Success Completion / Warning Banner */}
       {syncSuccessResult && (
-        <div className="p-6 bg-emerald-50 border border-emerald-200 rounded-3xl space-y-4">
+        <div className={`p-6 border rounded-3xl space-y-4 ${
+          syncSuccessResult.createdCount > 0 || syncSuccessResult.updatedCount > 0
+            ? 'bg-emerald-50 border-emerald-200'
+            : 'bg-amber-50 border-amber-200'
+        }`}>
           <div className="flex items-start gap-3">
-            <CheckCircle2 size={24} className="text-emerald-600 shrink-0 mt-0.5" />
+            {syncSuccessResult.createdCount > 0 || syncSuccessResult.updatedCount > 0 ? (
+              <CheckCircle2 size={24} className="text-emerald-600 shrink-0 mt-0.5" />
+            ) : (
+              <AlertCircle size={24} className="text-amber-600 shrink-0 mt-0.5" />
+            )}
             <div>
-              <h3 className="text-base font-bold text-emerald-950">
+              <h3 className={`text-base font-bold ${
+                syncSuccessResult.createdCount > 0 || syncSuccessResult.updatedCount > 0
+                  ? 'text-emerald-950'
+                  : 'text-amber-950'
+              }`}>
                 {syncSuccessResult.message}
               </h3>
-              <p className="text-xs text-emerald-800 mt-1">
+              <p className={`text-xs mt-1 ${
+                syncSuccessResult.createdCount > 0 || syncSuccessResult.updatedCount > 0
+                  ? 'text-emerald-800'
+                  : 'text-amber-800'
+              }`}>
                 Database has been updated with {syncSuccessResult.createdCount} new employee records created and {syncSuccessResult.updatedCount} existing records updated.
               </p>
             </div>
           </div>
 
+          {/* Row level errors if any */}
+          {syncSuccessResult.errorCount > 0 && syncSuccessResult.errors?.length > 0 && (
+            <div className="p-3 bg-amber-100/70 border border-amber-300 rounded-2xl text-xs text-amber-900 space-y-1">
+              <span className="font-bold">Row-level issues ({syncSuccessResult.errorCount}):</span>
+              <ul className="list-disc list-inside space-y-0.5">
+                {syncSuccessResult.errors.map((e, idx) => (
+                  <li key={idx}><span className="font-semibold">{e.employeeNo}</span>: {e.message}</li>
+                ))}
+              </ul>
+            </div>
+          )}
+
           <div className="flex flex-wrap gap-3 pt-2">
             <button
               type="button"
               onClick={() => {
+                if (onComplete) onComplete();
                 if (isModal && onClose) onClose();
                 navigate('/employees');
               }}

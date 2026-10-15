@@ -144,8 +144,25 @@ const confirmImport = async (req, res) => {
     }
 
     const result = await upsertEmployees(records, req.user?.email || 'admin');
+
+    if (result.errorCount > 0 && result.createdCount === 0 && result.updatedCount === 0) {
+      return res.status(400).json({
+        message: `Failed to import records: ${result.errors[0]?.message || 'Validation error'}`,
+        ...result
+      });
+    }
+
+    let summaryMsg = `Successfully synchronized ${result.totalReceived} employee records.`;
+    if (result.createdCount > 0 && result.updatedCount > 0) {
+      summaryMsg = `Successfully synchronized: ${result.createdCount} created, ${result.updatedCount} updated.`;
+    } else if (result.createdCount > 0) {
+      summaryMsg = `Successfully created ${result.createdCount} new employee record(s).`;
+    } else if (result.updatedCount > 0) {
+      summaryMsg = `Successfully updated ${result.updatedCount} existing employee record(s).`;
+    }
+
     res.json({
-      message: `Successfully synchronized ${result.totalReceived} employee records (${result.createdCount} created, ${result.updatedCount} updated).`,
+      message: summaryMsg,
       ...result
     });
   } catch (err) {

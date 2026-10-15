@@ -426,6 +426,22 @@ const parsePdfBuffer = async (buffer) => {
   };
 };
 
+const ALLOWED_PRISMA_EMPLOYEE_FIELDS = new Set([
+  'employeeNo', 'employeeId', 'fullName', 'callingName', 'gender', 'birthDate',
+  'civilStatus', 'nicNumber', 'division', 'designation', 'basedShift',
+  'shiftTimings', 'joiningDate', 'resignedDate', 'employmentStatus', 'status',
+  'email', 'contactNumber', 'residentAddress', 'permanentAddress',
+  'emergencyContact', 'relationship', 'salary', 'firstName', 'middleName',
+  'lastName', 'company', 'branch', 'department', 'reportsTo', 'grade',
+  'employmentType', 'shiftType', 'isStaff', 'mobile', 'companyEmail',
+  'personalEmail', 'currentAddress', 'currentAddressIs', 'permanentAddressIs',
+  'emergencyContactName', 'emergencyPhone', 'emergencyRelation', 'leaveBalance',
+  'attendancePercentage', 'basicSalary', 'allowances', 'deductions', 'netSalary',
+  'bankName', 'bankAccountNumber', 'paymentMethod', 'maritalStatus', 'bloodGroup',
+  'nationality', 'nationalId', 'bio', 'avatarUrl', 'confirmationDate',
+  'contractEndDate', 'relievingDate', 'exitReason'
+]);
+
 /**
  * Upserts array of parsed employee objects into database
  */
@@ -443,73 +459,91 @@ const upsertEmployees = async (records, performedByEmail = 'system') => {
     const rawData = { ...records[i] };
 
     try {
-      // 1. Determine or assign Employee No
-      if (!rawData.employeeNo) {
-        if (rawData.employeeId) {
-          rawData.employeeNo = rawData.employeeId;
-        } else {
-          const count = await prisma.employee.count();
-          rawData.employeeNo = `EMP-${String(count + 1).padStart(3, '0')}`;
+      // 1. Clean and filter rawData: strictly keep only valid Prisma Employee fields, remove preview metadata
+      const cleanData = {};
+      for (const [key, val] of Object.entries(rawData)) {
+        if (!key.startsWith('_') && ALLOWED_PRISMA_EMPLOYEE_FIELDS.has(key) && val !== null && val !== undefined && val !== '') {
+          cleanData[key] = val;
         }
       }
-      rawData.employeeId = rawData.employeeNo;
 
-      // 2. Backward compatibility logic
-      if (rawData.fullName && !rawData.firstName) {
-        const parts = rawData.fullName.trim().split(' ');
-        rawData.firstName = parts[0] || '';
-        rawData.lastName = parts.slice(1).join(' ') || '';
+      // 2. Determine or assign Employee No & ID
+      if (!cleanData.employeeNo) {
+        if (cleanData.employeeId) {
+          cleanData.employeeNo = cleanData.employeeId;
+        } else {
+          const count = await prisma.employee.count();
+          cleanData.employeeNo = `EMP-${String(count + 1).padStart(3, '0')}`;
+        }
       }
-      if (rawData.division && !rawData.department) {
-        rawData.department = rawData.division;
-      }
-      if (rawData.basedShift && !rawData.shiftType) {
-        rawData.shiftType = rawData.basedShift;
-      }
-      if (rawData.salary !== undefined && rawData.salary !== null) {
-        rawData.basicSalary = rawData.salary;
-        rawData.netSalary = rawData.salary;
-      }
+      cleanData.employeeNo = String(cleanData.employeeNo).trim();
+      cleanData.employeeId = cleanData.employeeNo;
 
-      // 3. Status determination
-      if (rawData.resignedDate) {
-        rawData.status = 'Resigned';
-      } else if (!rawData.status) {
-        rawData.status = 'Active';
+      // 3. Name handling
+      if (!cleanData.fullName) {
+        cleanData.fullName = cleanData.callingName || cleanData.employeeNo || 'Employee';
+      }
+      if (cleanData.fullName && !cleanData.firstName) {
+        const parts = cleanData.fullName.trim().split(' ');
+        cleanData.firstName = parts[0] || '';
+        cleanData.lastName = parts.slice(1).join(' ') || '';
       }
 
-      // 4. Check if employee already exists by employeeNo or employeeId
+      // 4. Backward compatibility organization fields
+      if (cleanData.division && !cleanData.department) {
+        cleanData.department = cleanData.division;
+      }
+      if (cleanData.basedShift && !cleanData.shiftType) {
+        cleanData.shiftType = cleanData.basedShift;
+      }
+
+      // 5. Numeric compensation safety
+      if (cleanData.salary !== undefined && cleanData.salary !== null && !isNaN(cleanData.salary)) {
+        cleanData.salary = parseFloat(cleanData.salary);
+        cleanData.basicSalary = cleanData.salary;
+        cleanData.netSalary = cleanData.salary;
+      } else {
+        delete cleanData.salary;
+      }
+
+      // 6. Status determination
+      if (cleanData.resignedDate && String(cleanData.resignedDate).trim() !== '') {
+        if (cleanData.employmentStatus === 'Permanent' || cleanData.employmentStatus === 'Probation') {
+          cleanData.status = 'Active';
+        } else {
+          cleanData.status = 'Resigned';
+        }
+      } else if (!cleanData.status) {
+        cleanData.status = 'Active';
+      }
+
+      // 7. Check if employee already exists by employeeNo or employeeId
       const existing = await prisma.employee.findFirst({
         where: {
           OR: [
-            { employeeNo: rawData.employeeNo },
-            { employeeId: rawData.employeeNo }
+            { employeeNo: cleanData.employeeNo },
+            { employeeId: cleanData.employeeNo }
           ]
         }
       });
 
       if (existing) {
-        // Prepare clean update payload (do not overwrite with null/empty if existing has data)
-        const updateData = {};
-        for (const [key, val] of Object.entries(rawData)) {
-          if (val !== null && val !== undefined && val !== '') {
-            updateData[key] = val;
-          }
-        }
-        delete updateData.id;
-        delete updateData.createdAt;
-        delete updateData.updatedAt;
+        // Prepare clean update payload
+        const updatePayload = { ...cleanData };
+        delete updatePayload.id;
+        delete updatePayload.createdAt;
+        delete updatePayload.updatedAt;
 
         const updated = await prisma.employee.update({
           where: { id: existing.id },
-          data: updateData
+          data: updatePayload
         });
         updatedCount++;
         processedRecords.push({ action: 'UPDATED', employeeNo: updated.employeeNo, fullName: updated.fullName });
       } else {
         // Create new
         const created = await prisma.employee.create({
-          data: rawData
+          data: cleanData
         });
         createdCount++;
         processedRecords.push({ action: 'CREATED', employeeNo: created.employeeNo, fullName: created.fullName });
