@@ -150,8 +150,19 @@ const ImportAutomation = ({ onClose, isModal = false, onComplete }) => {
     setErrorMsg('');
 
     try {
+      // Strip UI preview metadata (_importAction, _existingId, _matchedName) before sending to server
+      const cleanRecords = analysisResult.records.map((rec) => {
+        const clean = {};
+        for (const [k, v] of Object.entries(rec)) {
+          if (!k.startsWith('_')) {
+            clean[k] = v;
+          }
+        }
+        return clean;
+      });
+
       const res = await api.post('/employees/import/confirm', {
-        records: analysisResult.records
+        records: cleanRecords
       });
 
       setSyncSuccessResult(res.data);

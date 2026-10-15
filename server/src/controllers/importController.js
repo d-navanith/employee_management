@@ -143,7 +143,17 @@ const confirmImport = async (req, res) => {
       return res.status(400).json({ message: 'No records provided to update.' });
     }
 
-    const result = await upsertEmployees(records, req.user?.email || 'admin');
+    const cleanRecords = records.map((rec) => {
+      const clean = {};
+      for (const [k, v] of Object.entries(rec)) {
+        if (!k.startsWith('_')) {
+          clean[k] = v;
+        }
+      }
+      return clean;
+    });
+
+    const result = await upsertEmployees(cleanRecords, req.user?.email || 'admin');
 
     if (result.errorCount > 0 && result.createdCount === 0 && result.updatedCount === 0) {
       return res.status(400).json({
